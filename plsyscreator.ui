@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PLSysCreator</class>
+ <widget class="QDialog" name="PLSysCreator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1004</width>
+    <height>399</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>360</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>951</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="currentIndex">
+    <number>2</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Alphabet</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBoxDisplay">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>0</y>
+       <width>471</width>
+       <height>251</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Display symbol</string>
+     </property>
+     <widget class="QLabel" name="labelRule">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>100</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rules</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonEditSymbol">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>40</y>
+        <width>61</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edit...</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelSymbol">
+      <property name="geometry">
+       <rect>
+        <x>21</x>
+        <y>39</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Symbol</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonEditRule">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>180</y>
+        <width>61</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edit...</string>
+      </property>
+     </widget>
+     <widget class="QListView" name="listViewRules">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>100</y>
+        <width>251</width>
+        <height>111</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditSymbol">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>40</y>
+        <width>251</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="pushButtonAddRule">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>220</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Add Rule</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonAddSymbol">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>220</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Add Symbol</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelAlphabet">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>0</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Alphabet (rules)</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>0</y>
+       <width>181</width>
+       <height>251</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Create symbol</string>
+     </property>
+     <widget class="QLabel" name="labelSymbolName">
+      <property name="geometry">
+       <rect>
+        <x>21</x>
+        <y>80</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelSymbolParameter">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>130</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Parameter</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="doubleSpinBox">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>130</y>
+        <width>62</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonAddNewSymbol">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>200</y>
+        <width>51</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonCancelSymbol">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>200</y>
+        <width>81</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cancel</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditSymbolName">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>90</y>
+        <width>61</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>191</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="columnCount">
+      <number>3</number>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>63</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Symbol</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Parameter</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Rules</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Rule</string>
+    </attribute>
+    <widget class="QPushButton" name="pushButtonCancelRule">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>270</y>
+       <width>114</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Remove</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonAddNewRule">
+     <property name="geometry">
+      <rect>
+       <x>770</x>
+       <y>270</y>
+       <width>114</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Add</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>0</y>
+       <width>491</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Successor</string>
+     </property>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>40</y>
+        <width>62</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonRemoveTo">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>140</y>
+        <width>91</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt; Remove</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonAddFrom">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>110</y>
+        <width>91</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add &gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>30</y>
+        <width>62</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Result</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>62</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Symbol</string>
+      </property>
+     </widget>
+     <widget class="QListView" name="listViewFrom">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>181</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QListView" name="listViewTo">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>50</y>
+        <width>181</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="gridSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="viewMode">
+       <enum>QListView::ListMode</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>0</y>
+       <width>211</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Condition</string>
+     </property>
+     <widget class="QPushButton" name="pushButtonEq">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>70</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>==</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonInfEq">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>100</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>=&lt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonInf">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>190</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonSup">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>160</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonSupEq">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>130</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&gt;=</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxValueComp">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>130</y>
+        <width>57</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelValue">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>110</y>
+        <width>62</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Value</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelComparator">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Comparator</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_5">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>201</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Predecessor</string>
+     </property>
+     <widget class="QLabel" name="labelSymbols">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>62</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Symbol</string>
+      </property>
+     </widget>
+     <widget class="QListView" name="listViewSymbols">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>181</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Axiom</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>0</y>
+       <width>541</width>
+       <height>301</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Axiom</string>
+     </property>
+     <widget class="QLabel" name="labelAxiom">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>30</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Axiom</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAxiomList">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>70</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Axiom</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAlphabetList">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>70</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Alphabet</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonAddAxiom">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>120</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add &gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonRemoveAxiom">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>170</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt; Remove</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditAxiom">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>40</y>
+        <width>241</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidgetAxiom_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>191</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="columnCount">
+       <number>3</number>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>63</number>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Symbol</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Parameter</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Rules</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QTableWidget" name="tableWidgetAxiom">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>90</y>
+        <width>191</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="columnCount">
+       <number>3</number>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>63</number>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Symbol</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Parameter</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Rules</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>PLSysCreator</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>848</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>PLSysCreator</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>916</x>
+     <y>380</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
