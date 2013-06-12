@@ -27,7 +27,8 @@ HEADERS += icosphere.h \
            LSys/symbol.h \
            LSys/turtle.h \
            LSys/turtlecore.h \
-    GA/SPopulation.h
+    GA/SPopulation.h \
+    mainwindow.h
 
 SOURCES += icosphere.cpp \
            main.cpp \
@@ -41,7 +42,8 @@ SOURCES += icosphere.cpp \
            LSys/symbol.cpp \
            LSys/turtle.cpp \
            LSys/turtlecore.cpp \
-    GA/SPopulation.cpp
+    GA/SPopulation.cpp \
+    mainwindow.cpp
 
 
 INCLUDEPATH += /opt/local/include
@@ -54,12 +56,13 @@ INCLUDEPATH += $$PWD/../OpenMesh-2.3.1/src
 DEPENDPATH += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh
 
 unix:!macx: PRE_TARGETDEPS += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/libOpenMeshCored.a
-unix:!macx: LIBS += -L$$PWD/../convol/build/ -lconvol
+
+unix:!macx: LIBS += -L$$PWD/../build-convol/ -lconvol
 
 INCLUDEPATH += $$PWD/../convol
 DEPENDPATH += $$PWD/../convol
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../convol/build/libconvol.a
+unix:!macx: PRE_TARGETDEPS += $$PWD/../build-convol/libconvol.a
 
 
 
@@ -69,3 +72,6 @@ INCLUDEPATH += $$PWD/../OOGA
 DEPENDPATH += $$PWD/../OOGA
 
 unix:!macx: PRE_TARGETDEPS += $$PWD/../build-OOGA/libOOGA.a
+
+FORMS += \
+    mainwindow.ui

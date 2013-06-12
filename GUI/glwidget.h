@@ -45,6 +45,8 @@ public :
     void setSymbolVector(std::vector<Symbol*> symv);
     bool isSelected();
     void prepareImplicitSurface();
+    void exportMesh();
+    void clear();
 //! [2]
 protected:
     void initializeGL();
@@ -59,8 +61,8 @@ protected:
 //! [3]
 private:
     std::vector<Symbol*> symbolv;
+
     Turtle turtle;
-    int mNote;
     int xRot;
     int yRot;
     int zRot;
@@ -70,7 +72,7 @@ private:
     Convol::SkeletonT<AppTraits> *skel;
     Convol::BlobtreeRootT<AppTraits> *blobt;
     Convol::FunctorT<AppTraits> *kernel;
-    AppTraits::TriMesh *trim;
+    AppTraits::TriMesh trim;
     Convol::ImplicitSurfaceT<AppTraits> *implicitsurf;
 
 

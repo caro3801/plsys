@@ -57,6 +57,7 @@ PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(1){
 
 
 PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(1, 1) {
+    UNUSED(nbObjectives);
     this->iter=pSize;
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
 
@@ -73,6 +74,7 @@ PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(1, 1) {
 PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(1){
 
     //this->plsys=pPLSys;
+    delete plsys;
     setPLSys(*pPLSys);
     this->iter=getPLSys()->nbIterations;
     vector<Symbol *> symbv=getPLSys()->getPllist();
@@ -83,8 +85,11 @@ PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(1){
             this->mTSMap.push_back(s);
         }
     }
-
-    IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
+    int s=(this->mTSMap.size()>0)?this->mTSMap.size()-1:-1/*erreur*/;
+    if (s==-1){
+        cout <<"erreur"<<endl;
+    }
+    IntDomain* tsNameDomain = new IntDomain(0,s);
     addChromosome(new SymbolChromosome(symbv.size(),symbv, turtleDomain,tsNameDomain,mTSMap), 1);
 
     delete turtleDomain;

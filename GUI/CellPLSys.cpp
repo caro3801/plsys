@@ -6,16 +6,19 @@ CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent):QVBoxLa
     mGLWidget= new GLWidget(parent,pSymbolV);
     this->ID=id;
     mSelected=createSelectCheckBox();
+    mExport = new QPushButton("Export");
     this->addWidget(mGLWidget);
     this->addWidget(mSelected);
-
+    this->addWidget(mExport);
     connect(mSelected, SIGNAL(stateChanged(int)),this->getGLWidget(), SLOT(changeSelection()));
+    //connect(mExport, SIGNAL(clicked()),this->getGLWidget(), SLOT(exportMesh()));
 }
 
 
 CellPLSys::~CellPLSys(){
     delete mGLWidget;
     delete mSelected;
+    delete mExport;
     mSymbolV.clear();
 }
 
@@ -43,5 +46,8 @@ bool CellPLSys::isSelected(){
     return this->mSelected->isChecked();
 }
 
-
+void CellPLSys::clear(){
+    mSelected->setChecked(false);
+    mGLWidget->clear();
+}
 

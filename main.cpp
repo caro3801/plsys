@@ -4,15 +4,15 @@
 #include <config.h>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <iostream>
-#include "window.h"
-#include "functions.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 
-    bool graphic =true;
+   /* bool graphic =true;
     if (graphic){
 
         // Init factories: To do only Once!!
@@ -35,8 +35,13 @@ int main(int argc, char *argv[])
         PLSys * p=initglsystem();
         p->iterate();
         p->afficher(p->getPllist(),p->nbIterations);
-    }
 
+    }*/
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+
+    return a.exec();
 
 }
 

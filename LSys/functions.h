@@ -35,12 +35,12 @@ static bool alltrue(Symbol* l) {
 static vector<Symbol*>  tree(Symbol *l) {
     vector<Symbol*>  q;
 
-     Symbol *pus=new Symbol('[',0);
+     Symbol *pus=new Symbol('[',45.);
 
-     Symbol *po=new Symbol(']',0);
+     Symbol *po=new Symbol(']',346.);
 
-     Symbol *t= new Symbol('+',45);
-     Symbol *b= new Symbol('-',45);
+     Symbol *t= new Symbol('+',22.5);
+     Symbol *b= new Symbol('-',22.5);
      //q.push_back(alphabet.get('['));
      q.push_back(l);
      q.push_back(pus);
@@ -82,7 +82,7 @@ static vector<Symbol*>  reponse2(Symbol *l) {
 static PLSys* initglsystem(int iteration=0,QObject *parent=0){
 
 
-    Symbol *f= new Symbol('f',1);
+    Symbol *f= new Symbol('f',3);
     //Init with axiom
     vector<Symbol *> alphabet;
     alphabet.push_back(f);

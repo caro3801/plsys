@@ -3,11 +3,11 @@
 
 #include <QVector3D>
 #include <QWidget>
+#include <QMainWindow>
 #include "CellPLSys.h"
 #include "GAParameter.h"
 #include "SPopulation.h"
 #include "QSpinBox"
-class QSpinBox;
 class QSlider;
 class QLabel;
 class QCheckBox;
@@ -44,9 +44,10 @@ private:
     int nbCells;
     int iter;
     PLSys * mPlsys;
+    enum Affichage { Squelette, Convol, Console };
     std::vector<CellPLSys*> mCells;
 
-    QSlider *createVSlider();
+    QSlider *createVSlider(QWidget *parent=0);
     QSlider *createHSlider(int minRange=0, int maxRange=100, int singleStep=1, int pageStep=5, int tickInterval=5);
     QSlider *xSlider;
     QSlider *ySlider;
@@ -62,10 +63,10 @@ private:
     QLabel *crossoverLabel;
     QSlider *crossoverRateSlider;
 
-    QGroupBox *createSlidersGroup();
-    QGroupBox *createCellsGroup();
-    QGroupBox *createPLSysGroup();
-    QGroupBox *createAGGroup();
+    QGroupBox *createSlidersGroup(QWidget *parent=0);
+    QGroupBox *createCellsGroup(QWidget *parent=0);
+    QGroupBox *createPLSysGroup(QWidget *parent=0);
+    QGroupBox *createAGGroup(QWidget *parent=0);
 
     QSpinBox *iterSpinbox;
 

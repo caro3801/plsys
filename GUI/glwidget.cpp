@@ -13,6 +13,11 @@
 #include <Convol/include/functors/Kernels/CompactPolynomial/CompactPolynomial6T.h>
 #include <Convol/include/ScalarFields/BlobtreeNode/NodeOperators/NodeOperatorNCorrectedConvolutionT.h>
 
+#include <OpenMesh/Core/IO/MeshIO.hh>
+#include <OpenMesh/Core/IO/writer/OBJWriter.hh>
+#include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
+
+
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
 #endif
@@ -35,7 +40,7 @@ GLWidget::GLWidget(QWidget *parent, std::vector<Symbol *> symv)
     blobt = new Convol::BlobtreeRootT<AppTraits>();
     skel = new Convol::SkeletonT<AppTraits>(blobt);
     kernel = new Convol::CompactPolynomial6T<AppTraits>(2.0) ;
-    trim = 0;
+    //trim = 0;
     implicitsurf = new Convol::ImplicitSurfaceT<AppTraits>(blobt,1.0) ;
 
     prepareImplicitSurface();
@@ -46,11 +51,11 @@ GLWidget::GLWidget(QWidget *parent, std::vector<Symbol *> symv)
 GLWidget::~GLWidget()
 {
     symbolv.clear();
-    if (trim != 0)
-        delete trim;
+    /*if (trim != 0)
+        delete trim;*/
     delete kernel;
     delete implicitsurf;
-    delete skel;
+    //delete skel;
     delete blobt;
 
 }
@@ -228,28 +233,32 @@ void GLWidget::wheelEvent(QWheelEvent * event){
 }
 
 void GLWidget::draw(){
+    if (symbolv.size()>0){
 
-    for (AppTraits::TriMesh::FaceIter f_it = trim->faces_begin(); f_it != trim->faces_end(); ++f_it)
+    for (AppTraits::TriMesh::FaceIter f_it = trim.faces_begin(); f_it != trim.faces_end(); ++f_it)
     {
         glBegin(GL_POLYGON);      // Get the face-vertex circulator of face _fh
-        for (AppTraits::TriMesh::FaceVertexIter fv_it = trim->fv_iter(f_it); fv_it; ++fv_it)
+        for (AppTraits::TriMesh::FaceVertexIter fv_it = trim.fv_iter(f_it); fv_it; ++fv_it)
         {
-            glColor3dv(&(trim->color(fv_it)[0]));
-            glNormal3dv(&(trim->normal(fv_it)[0]));
-            glVertex3dv(&(trim->point(fv_it)[0]));
+            glColor3dv(&(trim.color(fv_it)[0]));
+            glNormal3dv(&(trim.normal(fv_it)[0]));
+            glVertex3dv(&(trim.point(fv_it)[0]));
         }
         glEnd();
+    }
     }
 }
 
 
 void GLWidget::prepareImplicitSurface(){
+
     skel->clear();
     blobt->Clear();
-    if (trim!=0)
-        delete trim;
-    trim = new AppTraits::TriMesh;
-
+    //trim=0;
+    /*if (trim!=0)
+        delete trim;*/
+    //trim = new AppTraits::TriMesh;
+    trim = AppTraits::TriMesh();
     Convol::NodeOperatorNCorrectedConvolutionT<Convol::CompactPolynomial6T<AppTraits> >* op_node =
             new Convol::NodeOperatorNCorrectedConvolutionT<Convol::CompactPolynomial6T<AppTraits> >();
     skel->nonconst_blobtree_root().AddChildToNAryNode(&(skel->nonconst_blobtree_root()), op_node);
@@ -314,11 +323,57 @@ void GLWidget::prepareImplicitSurface(){
 
     blobt->PrepareForEval(0.001, 0.1);
     Convol::tools::BasicMarchingCube<AppTraits>::AxisBoundingBox abb = blobt->GetAxisBoundingBox(0.9);
+   // abb.Scale(2.0);
+   // blobt->set_axis_bounding_box(abb);
+    //abb=blobt->axis_bounding_box();
+    //abb.Scale(4);
+    bool b=false;
+    foreach (Symbol * s,symbolv){
+        if (s->getName()=='f'){
+            b=true;
+            break;
+        }
+    }
 
-    Convol::tools::BasicMarchingCube<AppTraits> marcher(implicitsurf, 0.2, abb, 0.0, trim);
-    marcher.ComputeGrid();
-    marcher.March(true);
+    if (symbolv.size()>0){  //Convol::tools::BasicMarchingCube<AppTraits> marcher(implicitsurf, 0.4, abb, 0.0, &trim);
+        if (b){
+            Convol::tools::BasicMarchingCube<AppTraits> marcher(implicitsurf, 0.2, abb, 0.0, &trim);
+            marcher.ComputeGrid();
+            marcher.March(true);
+        }else{
+            cout <<"ici"<<endl;
+        }
+
+
+    }
+
+
+
+
 
 }
 
+void GLWidget::exportMesh(){
 
+
+    //mesh      =this->trim;
+
+    //OpenMesh::IO::OFFWriter();
+   /* OpenMesh::IO::Options wopt;
+    if (!OpenMesh::IO::OBJWriter().write("/home/caroline/workspace/test.stl",OpenMesh::IO::ExporterT<>(trim),wopt))
+       // if (!OpenMesh::IO::write_mesh(trim, "/home/caroline/workspace/test.stl"))
+    {
+       std::cerr << "write error\n";
+      exit(1);
+    }*/
+}
+
+
+void GLWidget::clear(){
+
+    mSelected=false;
+    symbolv.clear();
+    skel->clear();
+    blobt->Clear();
+    updateGL();
+}

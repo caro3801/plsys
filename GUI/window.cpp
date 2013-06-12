@@ -5,6 +5,10 @@
 #include "QCheckBox"
 #include "QPushButton"
 #include "QToolTip"
+#include "QMenuBar"
+#include "QMenu"
+
+
 #include "qobject.h"
 #include "functions.h"
 #include "window.h"
@@ -39,12 +43,24 @@ Window::Window()
     isSeeded=false;
     iter=0;
     mPlsys= 0;
+    QMenuBar *menuBar = new QMenuBar(this);
+    // Creating a menu "File"
+    QMenu* menuFile = new QMenu("File");
+
+    // And adding the menu "File" in the menu bar
+    menuBar->addMenu(menuFile);
+
+    // Now we add our items
+    // Add an item "Open"
+    menuFile->addAction("Open");
+    // Then set the menu bar to the main window
+    //this->setMenuBar(menuBar);
     //GA
 
     glLayout = new QGridLayout();
     generationButton = new QPushButton("generation");
 
-    QGridLayout *mainLayout = new QGridLayout();
+    QGridLayout *mainLayout = new QGridLayout(this);
     QVBoxLayout * leftside = new QVBoxLayout();
     QGroupBox * slidersgroup=createSlidersGroup();
     QGroupBox * cellsgroup=createCellsGroup();
@@ -88,9 +104,9 @@ QSlider *Window::createHSlider(int minRange,int maxRange,int singleStep,int page
 }
 
 //vertical
-QSlider *Window::createVSlider()
+QSlider *Window::createVSlider(QWidget * parent)
 {
-    QSlider *slider = new QSlider(Qt::Vertical);
+    QSlider *slider = new QSlider(Qt::Vertical,parent);
     slider->setRange(0, 360 * 16);
     slider->setSingleStep(16);
     slider->setPageStep(15 * 16);
@@ -168,8 +184,8 @@ void Window::updateCells(){
  */
 
 //sliders rotation
-QGroupBox * Window::createSlidersGroup(){
-    QGroupBox *groupBox = new QGroupBox( tr("Rotation sliders"));
+QGroupBox * Window::createSlidersGroup(QWidget * parent){
+    QGroupBox *groupBox = new QGroupBox( tr("Rotation sliders"),parent);
 
     xSlider = createVSlider();
     ySlider = createVSlider();
@@ -189,9 +205,9 @@ QGroupBox * Window::createSlidersGroup(){
 }
 
 //cell manager
-QGroupBox * Window::createCellsGroup(){
+QGroupBox * Window::createCellsGroup(QWidget * parent){
 
-    QGroupBox *groupBox = new QGroupBox(tr("Cells per generation"));
+    QGroupBox *groupBox = new QGroupBox(tr("Cells per generation"),parent);
 
     nbCellsSlider = createHSlider(4,12,2,4,4);
     nbCellsSlider->setValue(4);
@@ -202,9 +218,9 @@ QGroupBox * Window::createCellsGroup(){
 }
 
 //plsys manager
-QGroupBox * Window::createPLSysGroup(){
+QGroupBox * Window::createPLSysGroup(QWidget * parent){
 
-    QGroupBox *groupBox = new QGroupBox(tr("Parametric L-system"));
+    QGroupBox *groupBox = new QGroupBox(tr("Parametric L-system"),parent);
     createLSysButton = new QPushButton("create plsys");
     connect(createLSysButton,SIGNAL(clicked()),this,SLOT(lsyscreatorwindow()));
     initlsysButton = new QPushButton("init plsys");
@@ -221,9 +237,9 @@ QGroupBox * Window::createPLSysGroup(){
 }
 
 // ag controls
-QGroupBox * Window::createAGGroup(){
+QGroupBox * Window::createAGGroup(QWidget *parent){
 
-    QGroupBox *groupBox = new QGroupBox(tr("Evolution controls"));
+    QGroupBox *groupBox = new QGroupBox(tr("Evolution controls"),parent);
     generationButton = new QPushButton("generation");
     generationButton->setEnabled(false);
 
@@ -301,7 +317,7 @@ void Window::setMutationRate(int val){
     QToolTip::showText(QCursor::pos(),tr("Mutation rate : ") % QString::number(val) % QString("%"));
     if (isSeeded){
         params->setMutationRate(val/100.);
-    this->pop->updateGAParameter();
+        this->pop->updateGAParameter();
     }
 }
 
