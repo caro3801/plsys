@@ -35,9 +35,9 @@ static bool alltrue(Symbol* l) {
 static vector<Symbol*>  tree(Symbol *l) {
     vector<Symbol*>  q;
 
-     Symbol *pus=new Symbol('[',45.);
+     Symbol *pus=new Symbol('[');
 
-     Symbol *po=new Symbol(']',346.);
+     Symbol *po=new Symbol(']');
 
      Symbol *t= new Symbol('+',22.5);
      Symbol *b= new Symbol('-',22.5);
@@ -72,9 +72,9 @@ static vector<Symbol*> reponse(Symbol *l) {
 static vector<Symbol*>  reponse2(Symbol *l) {
     vector<Symbol*>  q;
 
-     q.push_back( new Symbol('[',0));
+     q.push_back( new Symbol('['));
      q.push_back( new Symbol('f',1));
-     q.push_back( new Symbol(']',0));
+     q.push_back( new Symbol(']'));
      q.push_back(l);
     return q;
 }

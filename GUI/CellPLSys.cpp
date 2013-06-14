@@ -7,6 +7,8 @@ CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent):QVBoxLa
     this->ID=id;
     mSelected=createSelectCheckBox();
     mExport = new QPushButton("Export");
+    mExport->setIcon(QIcon(":/img/save.png"));
+    mExport->setIconSize(QSize(40,40));
     this->addWidget(mGLWidget);
     this->addWidget(mSelected);
     this->addWidget(mExport);

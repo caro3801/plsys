@@ -1,4 +1,5 @@
 #include "symbol.h"
+#include "Random.h"
 #include "QString"
 #include <iostream>
 using namespace std;
@@ -38,6 +39,24 @@ Symbol::Symbol(char name, double value){
     this->params.push_back((param){'x',value});
     this->nbparams=1;
 }
+Symbol::Symbol(char name){
+    try{
+        if (name!=']' && name!= '['){
+            throw string("don't use the good symbol");
+        }
+        Random *r=NULL;
+        double value=r->getInstance()->getDouble()*360;
+        this->name=name;
+        this->params.push_back((param){'x',value});
+        this->nbparams=1;
+
+    } catch ( const std::string & Msg )
+    {
+        std::clog << Msg<<this->getName();
+        exit(1);
+    }
+
+}
 
 char Symbol::getName(){
     return this->name;
@@ -51,7 +70,7 @@ int Symbol::getNbParams(){
 double Symbol::get(char pnam){
     try{
         if (!this->params.empty()){
-            for(int i=0;i<this->nbparams;i++){
+            for(int i=0;i<this->params.size();i++){
                 if (this->params[i].pname==pnam)
                 {
                     return this->params[i].value;
@@ -82,6 +101,8 @@ double Symbol::get(int pnum=0){
             if(pnum<this->nbparams && pnum>=0)
             {
                 return this->params[pnum].value;
+            }else if(nbparams==0 && pnum==0){
+                return params[pnum].value;
             }
             else {
                 throw "L'argument demandé n'existe pas";

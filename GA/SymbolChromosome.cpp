@@ -26,60 +26,77 @@ SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> symbolV,DoubleD
     int opened=0;
     Random *lRandom=NULL;
     lRandom->getInstance();
+    double ratio;
+    foreach (Symbol *s,symbolV) {
+        if(s->getName()=='f'){
+            ratio++;
+        }
+    }
+    ratio/=nbSymbol;
+    int j=0;
+    while (tsmap.at(j)->getName()!='f'){
+        j++;
+    }
     for (int i=0; i<nbSymbol;i++){
 
-        Symbol * s=symbolV[i];
         double delta=0;
         double mod=0;
         double dmin=0;
         double dmax=0;
-        double symval;
-        (s->getNbParams()==0)?symval=lRandom->getDouble()*360.:symval=s->get(0);
-        char c=s->getName();
+        char c=' ';
+        double symval=symbolV[i]->get(0);
 
         ComplexGene* lGene= new ComplexGene(2);
+        IntGene* tmpGene;
+        if (ratio<lRandom->getDouble()){
+            tmpGene=new IntGene(tsNameDomain,j);
+            c='f';
+        }else{
 
-            IntGene* tmpGene=new IntGene(tsNameDomain);
+            tmpGene=new IntGene(tsNameDomain);
             do {
                 tmpGene->mutate();
                 c=tsmap.at(tmpGene->get())->getName();
 
             }while((c==']' && opened==0));
 
-            lGene->addGene(tmpGene);
+        }
 
-            switch (c){
-            case 'f':
-                delta=1.;
-                mod=5.;
-                break;
-            case'[':
-                opened++;
-                delta=30;
-                mod=360.;
-                break;
-            case ']':
-                opened--;
-                delta=30;
-                mod=360.;
-                break;
-            default:
-                delta=10.;
-                mod=360.;
-                break;
-            }
 
-            dmin=modulo(symval-delta,mod);
-            dmax=modulo(symval+delta,mod);
-            if (dmin>dmax){
-                double tmp=dmin;
-                dmin=dmax;
-                dmax=tmp;
-            }
+        lGene->addGene(tmpGene);
 
-            turtleDomain->setMin(dmin);
-            turtleDomain->setMax(dmax);
-            lGene->addGene(new DoubleGene(turtleDomain));
+        switch (c){
+        case 'f':
+            delta=1.;
+            mod=3.;
+            break;
+        case'[':
+            opened++;
+            delta=30;
+            mod=360.;
+            break;
+        case ']':
+            opened--;
+            delta=30;
+            mod=360.;
+            break;
+        default:
+            delta=10.;
+            mod=360.;
+            break;
+        }
+
+        dmin=modulo(symval-delta,mod);
+        dmax=modulo(symval+delta,mod);
+        if (dmin>dmax){
+            double tmp=dmin;
+            dmin=dmax;
+            dmax=tmp;
+        }
+
+        turtleDomain->setMin(dmin);
+        turtleDomain->setMax(dmax);
+        lGene->addGene(new DoubleGene(turtleDomain));
 
 
         this->addGene(lGene);
@@ -187,10 +204,10 @@ vector<Symbol *> SymbolChromosome::convertGenesToSymbols(vector<Symbol*> mapTS){
 
         ComplexGene* lComplexGene=(ComplexGene*)this->getGene(i);
 
-            int j=((IntGene *)lComplexGene->getGene(0))->get();
-            double k=((DoubleGene *)lComplexGene->getGene(1))->get();
+        int j=((IntGene *)lComplexGene->getGene(0))->get();
+        double k=((DoubleGene *)lComplexGene->getGene(1))->get();
 
-            lsymbolv.push_back(new Symbol(mapTS.at(j)->getName(),parametres(1,(param){'x',k})));
+        lsymbolv.push_back(new Symbol(mapTS.at(j)->getName(),parametres(1,(param){'x',k})));
 
     }
     return lsymbolv;

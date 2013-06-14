@@ -16,6 +16,7 @@ public:
     Symbol();
     Symbol(char name, std::vector<param> p);
     Symbol(char name, double value);
+    Symbol(char name);
     ~Symbol();
     void afficher();
     std::string toString();
