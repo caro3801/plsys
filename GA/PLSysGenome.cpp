@@ -176,7 +176,7 @@ Genome* PLSysGenome::copy() {
 }
 
 vector<Symbol*> PLSysGenome::convertSymbolChromosomeToSymbolVector(){
-    return ((SymbolChromosome*)this->getChromosome(0))->convertGenesToSymbols(this->mTSMap);
+    return ((SymbolChromosome*)this->getChromosome(0))->convertGenesToSymbols(mTSMap);
 
 }
 

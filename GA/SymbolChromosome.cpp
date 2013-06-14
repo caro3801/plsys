@@ -34,6 +34,7 @@ SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> symbolV,DoubleD
     }
     ratio/=nbSymbol;
     int j=0;
+
     while (tsmap.at(j)->getName()!='f'){
         j++;
     }
@@ -43,8 +44,8 @@ SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> symbolV,DoubleD
         double mod=0;
         double dmin=0;
         double dmax=0;
-        char c=' ';
-        double symval=symbolV[i]->get(0);
+        char c=symbolV.at(i)->getName();
+        double symval=symbolV.at(i)->get(0);
 
         ComplexGene* lGene= new ComplexGene(2);
         IntGene* tmpGene;

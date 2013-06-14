@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-   /* bool graphic =true;
+    /* bool graphic =true;
     if (graphic){
 
         // Init factories: To do only Once!!
@@ -37,11 +37,17 @@ int main(int argc, char *argv[])
         p->afficher(p->getPllist(),p->nbIterations);
 
     }*/
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
 
-    return a.exec();
+
+      Convol::RegisterAllConvolFunctorsT<AppTraits>::RegisterNow();
+        Convol::RegisterAllConvolSkelPrimitivesT<AppTraits>::RegisterNow();
+        Convol::RegisterAllConvolBlobtreeNodesT<AppTraits>::RegisterNow();
+        QApplication a(argc, argv);
+        MainWindow w;
+        w.show();
+
+        return a.exec();
+
 
 }
 

@@ -22,7 +22,7 @@ public:
     virtual Chromosome* create();
     virtual bool equals(Chromosome* pChromo);
     virtual void mutate();
-    vector<Symbol *> convertGenesToSymbols(vector<Symbol *> mapTS);
+    vector<Symbol *> convertGenesToSymbols(std::vector<Symbol *> mapTS);
 
 };
 

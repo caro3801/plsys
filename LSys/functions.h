@@ -8,6 +8,12 @@ using namespace std;
 struct param;
 
 /**/
+static Symbol pa= Symbol('[');
+
+static Symbol pb= Symbol(']');
+
+static Symbol ta=  Symbol('+',22.5);
+static Symbol bb=  Symbol('-',22.5);
 static vector<param> parametres(int nbp, ...){
     param p[nbp];
     va_list ap;
@@ -42,6 +48,7 @@ static vector<Symbol*>  tree(Symbol *l) {
      Symbol *t= new Symbol('+',22.5);
      Symbol *b= new Symbol('-',22.5);
      //q.push_back(alphabet.get('['));
+     /*
      q.push_back(l);
      q.push_back(pus);
      q.push_back(t);
@@ -52,6 +59,17 @@ static vector<Symbol*>  tree(Symbol *l) {
      q.push_back(b);
      q.push_back(l);
      q.push_back(po);
+     q.push_back(l);*/
+     q.push_back(l);
+     q.push_back(&pa  );
+     q.push_back(&ta);
+     q.push_back(l);
+     q.push_back(&pb);
+     q.push_back(l);
+     q.push_back(&pa);
+     q.push_back(&bb);
+     q.push_back(l);
+     q.push_back(&pb);
      q.push_back(l);
     return q;
 }
@@ -82,6 +100,7 @@ static vector<Symbol*>  reponse2(Symbol *l) {
 static PLSys* initglsystem(int iteration=0,QObject *parent=0){
 
 
+
     Symbol *f= new Symbol('f',3);
     //Init with axiom
     vector<Symbol *> alphabet;
@@ -100,5 +119,6 @@ static PLSys* initglsystem(int iteration=0,QObject *parent=0){
    // axiom.push_back(a2);
     return new PLSys(parent,alphabet, axiom,rules,iteration);
 }
+
 /**/
 #endif // FUNCTIONS_H

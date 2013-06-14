@@ -54,6 +54,7 @@ PLSys::PLSys(QObject *parent,vector<Symbol*> alphabet,vector<Symbol*> axiom, vec
     }
 }
 
+
 std::vector<Symbol *> PLSys::getPllist(){
     return this->pllist;
 }
@@ -180,7 +181,7 @@ bool PLSys::inAlphabet(Symbol * s){
 void PLSys::setPLList(vector<Symbol*> symbollist){
     this->pllist=symbollist;
 
-    this->mapTS=vector<Symbol*>();
+    this->mapTS.clear();
     unsigned int i=0;
     while(i<this->pllist.size()){
         feedmap(this->pllist[i]);
