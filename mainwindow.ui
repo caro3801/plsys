@@ -34,6 +34,9 @@
   <property name="windowTitle">
    <string>BIG3DPO</string>
   </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonIconOnly</enum>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
@@ -309,6 +312,31 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>110</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="prefix">
+                <string>Generation </string>
+               </property>
+               <property name="maximum">
+                <number>400</number>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>
@@ -394,7 +422,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -403,18 +431,9 @@
     </property>
     <addaction name="separator"/>
     <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
     <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="menuRender">
-    <property name="title">
-     <string>Render</string>
-    </property>
-    <addaction name="actionSquelette"/>
-    <addaction name="actionConvolution_Surface"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuRender"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -471,7 +490,6 @@
   <tabstop>pushButtonInitPLSys</tabstop>
   <tabstop>spinBoxIteration</tabstop>
   <tabstop>pushButtonSeedAG</tabstop>
-  <tabstop>pushButtonEvolveAG</tabstop>
   <tabstop>horizontalSliderMutations</tabstop>
   <tabstop>horizontalSliderCrossover</tabstop>
   <tabstop>horizontalSliderX</tabstop>

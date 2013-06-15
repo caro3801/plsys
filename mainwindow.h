@@ -59,8 +59,6 @@ public slots:
     void initGA();
     void newgeneration();
     void seedAG();
-private slots:
-    void on_actionSave_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -68,8 +68,8 @@ SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> symbolV,DoubleD
 
         switch (c){
         case 'f':
-            delta=1.;
-            mod=3.;
+            delta=0.3;
+            mod=1.5;
             break;
         case'[':
             opened++;

@@ -146,7 +146,7 @@ void Window::setNbCells(int val){
         }
         if(row ==0 && i!=0) col++;
         CellPLSys * tmpC=mCells.at(i);
-        glLayout->addLayout(tmpC,row,col);
+        glLayout->addLayout(tmpC->v,row,col);
         GLWidget* tmp=tmpC->getGLWidget();
         connect(this->xSlider, SIGNAL(valueChanged(int)), tmp, SLOT(setXRotation(int)));
         connect(tmp, SIGNAL(xRotationChanged(int)), this->xSlider, SLOT(setValue(int)));

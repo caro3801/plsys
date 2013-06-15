@@ -1,19 +1,34 @@
 #include "CellPLSys.h"
+#include "QVBoxLayout"
+#include "QHBoxLayout"
 using namespace std;
 
-CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent):QVBoxLayout(parent)
-   {
-    mGLWidget= new GLWidget(parent,pSymbolV);
+CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent)
+{
     this->ID=id;
+
+    mGLWidget= new GLWidget(parent,pSymbolV,id);
+
+
     mSelected=createSelectCheckBox();
     mExport = new QPushButton("Export");
-    mExport->setIcon(QIcon(":/img/save.png"));
+    mExport->setIcon(QIcon("save.png"));
     mExport->setIconSize(QSize(40,40));
-    this->addWidget(mGLWidget);
+    mExport->setMaximumWidth(60);
+    /*   this->addWidget(mGLWidget);
     this->addWidget(mSelected);
     this->addWidget(mExport);
-    connect(mSelected, SIGNAL(stateChanged(int)),this->getGLWidget(), SLOT(changeSelection()));
-    //connect(mExport, SIGNAL(clicked()),this->getGLWidget(), SLOT(exportMesh()));
+   */
+    QObject::connect(mSelected, SIGNAL(stateChanged(int)),this->getGLWidget(), SLOT(changeSelection()));
+
+    QObject::connect(mExport, SIGNAL(clicked()),this->getGLWidget(), SLOT(exportMesh()));
+    v= new QVBoxLayout();
+    QHBoxLayout * h= new QHBoxLayout();
+    h->addWidget(mSelected);
+    h->addWidget(mExport);
+    v->addWidget(mGLWidget);
+    v->addLayout(h);
+
 }
 
 
@@ -47,6 +62,10 @@ void CellPLSys::setSymbolV(vector<Symbol*> symv){
 bool CellPLSys::isSelected(){
     return this->mSelected->isChecked();
 }
+
+  QPushButton * CellPLSys::getExportButton(){
+      return this->mExport;
+  }
 
 void CellPLSys::clear(){
     mSelected->setChecked(false);

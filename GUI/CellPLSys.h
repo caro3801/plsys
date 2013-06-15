@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 using namespace std;
 
-class CellPLSys : public QVBoxLayout
+class CellPLSys
 {
 
 public:
@@ -19,11 +19,15 @@ public:
 
     void setSymbolV(std::vector<Symbol*> symv);
     bool isSelected();
+    QPushButton * getExportButton();
 
     void clear();
 
+    QVBoxLayout *v;
 signals:
     void stateChanged(int state);
+
+    void clicked();
 
 private:
     int ID;
@@ -31,6 +35,7 @@ private:
     QCheckBox * mSelected;
     QPushButton * mExport;
     std::vector<Symbol*> mSymbolV;
+
 };
 
 #endif // CELLPLSYS_H

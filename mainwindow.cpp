@@ -112,7 +112,7 @@ void MainWindow::setNbCells(int val){
             row=i%2;
         }
         if(row ==0 && i!=0) col++;
-        ui->gridLayoutCells->addLayout(mCells[i],row,col);
+        ui->gridLayoutCells->addLayout(mCells[i]->v,row,col);
         GLWidget* tmp=mCells.at(i)->getGLWidget();
         connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), tmp, SLOT(setXRotation(int)));
         connect(tmp, SIGNAL(xRotationChanged(int)),ui->horizontalSliderX , SLOT(setValue(int)));
@@ -207,22 +207,3 @@ void MainWindow::updateGeneticOperators(){
 
 
 
-void MainWindow::on_actionSave_triggered()
-{
-    ui->widgetPLSys->exportMesh();
-
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), QString(),
-    tr("Text Files (*.txt);;C++ Files (*.cpp *.h)"));
-
-    if (!fileName.isEmpty()) {
-        QFile file(fileName);
-        if (!file.open(QIODevice::WriteOnly)) {
-            // error message
-        } else {
-            QTextStream stream(&file);
-           // stream << ui->textEdit->toPlainText();
-           // stream.flush();
-            //file.close();
-        }
-    }
-}

@@ -21,7 +21,7 @@ public:
     typedef Convol::SkelHomotheticSegmentT<AppTraits> SkelHSegment;
 
 public:
-    GLWidget(QWidget *parent = 0, std::vector<Symbol*> symv=std::vector<Symbol *>());
+    GLWidget(QWidget *parent = 0, std::vector<Symbol*> symv=std::vector<Symbol *>(), int ID=-1);
     ~GLWidget();
 
     QSize minimumSizeHint() const;
@@ -34,6 +34,7 @@ public slots:
     void setYRotation(int angle);
     void setZRotation(int angle);
     void changeSelection();
+    void exportMesh();
 
 signals:
     void xRotationChanged(int angle);
@@ -45,7 +46,6 @@ public :
     void setSymbolVector(std::vector<Symbol*> symv);
     bool isSelected();
     void prepareImplicitSurface();
-    void exportMesh();
     void clear();
 //! [2]
 protected:
@@ -63,6 +63,7 @@ private:
     std::vector<Symbol*> symbolv;
 
     Turtle turtle;
+    int ID;
     int xRot;
     int yRot;
     int zRot;

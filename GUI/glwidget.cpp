@@ -2,9 +2,9 @@
 #include <QtOpenGL>
 #include <QKeyEvent>
 #include "GL/gl.h"
-#include <math.h>
 #include <iostream>
 #include <stack>
+#include <Random.h>
 
 #include "glwidget.h"
 #include "symbol.h"
@@ -25,10 +25,10 @@
 using namespace std;
 
 //! [0]
-GLWidget::GLWidget(QWidget *parent, std::vector<Symbol *> symv)
+GLWidget::GLWidget(QWidget *parent, std::vector<Symbol *> symv, int ID)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
-
+    this->ID=ID;
     symbolv = symv;
     mSelected=false;
     xRot = 0;
@@ -289,8 +289,19 @@ void GLWidget::prepareImplicitSurface(){
                 if (plop < 255.)
                     plop += 25.;
                 cur_vh = new SkelVHandle(pp, 1.0, op_node, skel);
+
+                Random * r=NULL;
+                r->getInstance();
+                double weight;
+
+
+                weight=1-r->getDouble()*0.5;
+
+                cur_vh->set_weight(weight);
+                delete r;
                 SkelHSegment* seg = SkelHSegment::Create(*skel, last_vh, cur_vh, *static_cast<Convol::CompactPolynomial6T<AppTraits>* >(kernel));
                 last_vh = cur_vh;
+
                 seg->set_density_p1(1.0);
                 seg->set_density_p2(1.0);
                 seg->SetVectorProperty(AppTraits::E_Direction, seg->unit_dir());
@@ -356,16 +367,21 @@ void GLWidget::prepareImplicitSurface(){
 void GLWidget::exportMesh(){
 
 
+    std::string filename=QString("%1/shape_%2.%3")
+            .arg(QCoreApplication::applicationDirPath())
+            .arg(QString::number(this->ID))
+            .arg("stl").toStdString();
+    cout << filename<<endl;
     //mesh      =this->trim;
 
     //OpenMesh::IO::OFFWriter();
-   /* OpenMesh::IO::Options wopt;
-    if (!OpenMesh::IO::OBJWriter().write("/home/caroline/workspace/test.stl",OpenMesh::IO::ExporterT<>(trim),wopt))
-       // if (!OpenMesh::IO::write_mesh(trim, "/home/caroline/workspace/test.stl"))
+   OpenMesh::IO::Options wopt;
+   // if (!OpenMesh::IO::OBJWriter().write("/home/caroline/workspace/test.stl",OpenMesh::IO::ExporterT<>(trim),wopt))
+    if (!OpenMesh::IO::write_mesh(trim, filename))
     {
        std::cerr << "write error\n";
       exit(1);
-    }*/
+    }
 }
 
 
