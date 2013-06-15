@@ -57,14 +57,17 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::initPLSys(){
+
     ui->widgetPLSys->clear();
+    ui->spinBoxGeneration->setValue(0);
+    iter=ui->spinBoxIteration->value();
     mPlsys= initglsystem(iter);
     isInit=true;
     isSeeded=false;
     updatePLSysWidget();
     //updateCells();
-    ui->spinBoxIteration->setEnabled(true);
     ui->pushButtonSeedAG->setEnabled(true);
+    ui->spinBoxGeneration->setEnabled(true);
     ui->labelMutRate->setEnabled(true);
     ui->horizontalSliderMutations->setEnabled(true);
     ui->labelCrossRate->setEnabled(true);
@@ -92,7 +95,11 @@ void MainWindow::updatePLSysWidget()
 void MainWindow::setNbCells(int val){
     //QToolTip::showText(QCursor::pos(),tr("Nb Individus : ") % QString::number(val));
     //remove widget in glLayout
+    foreach (CellPLSys *p, mCells) {
+        delete p;
+    }
     mCells.clear();
+
     QLayoutItem *child;
     while ((child = ui->gridLayoutCells->takeAt(0)) != 0) {
         delete child;
@@ -168,6 +175,7 @@ void MainWindow::seedAG(){
     params->setMutationRate((double)this->mutRate/100);
     initGA();
     ui->pushButtonEvolveAG->setEnabled(true);
+    ui->spinBoxGeneration->setValue(0);
     isSeeded=true;
     updateCells();
 }
@@ -195,7 +203,7 @@ void MainWindow::newgeneration(){
         this->pop->setGenomesSymbolsArray();
         updateCells();
     }
-
+    ui->spinBoxGeneration->stepUp();
 }
 
 

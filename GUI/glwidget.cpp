@@ -50,6 +50,7 @@ GLWidget::GLWidget(QWidget *parent, std::vector<Symbol *> symv, int ID)
 //! [1]
 GLWidget::~GLWidget()
 {
+
     symbolv.clear();
     /*if (trim != 0)
         delete trim;*/
@@ -237,6 +238,7 @@ void GLWidget::draw(){
 
     for (AppTraits::TriMesh::FaceIter f_it = trim.faces_begin(); f_it != trim.faces_end(); ++f_it)
     {
+
         glBegin(GL_POLYGON);      // Get the face-vertex circulator of face _fh
         for (AppTraits::TriMesh::FaceVertexIter fv_it = trim.fv_iter(f_it); fv_it; ++fv_it)
         {
@@ -244,6 +246,7 @@ void GLWidget::draw(){
             glNormal3dv(&(trim.normal(fv_it)[0]));
             glVertex3dv(&(trim.point(fv_it)[0]));
         }
+
         glEnd();
     }
     }
@@ -363,7 +366,12 @@ void GLWidget::prepareImplicitSurface(){
 
 
 }
+static void parse(OpenMesh::IO::Options &wopt ){
+   //wopt += OpenMesh::IO::Options::VertexNormal;
+   //wopt += OpenMesh::IO::Options::VertexColor;
+    wopt += OpenMesh::IO::Options::Binary;
 
+}
 void GLWidget::exportMesh(){
 
 
@@ -374,20 +382,22 @@ void GLWidget::exportMesh(){
     cout << filename<<endl;
     //mesh      =this->trim;
 
-    //OpenMesh::IO::OFFWriter();
    OpenMesh::IO::Options wopt;
+   parse(wopt);
    // if (!OpenMesh::IO::OBJWriter().write("/home/caroline/workspace/test.stl",OpenMesh::IO::ExporterT<>(trim),wopt))
-    if (!OpenMesh::IO::write_mesh(trim, filename))
-    {
-       std::cerr << "write error\n";
-      exit(1);
-    }
+   if (!OpenMesh::IO::write_mesh(trim, filename,(OpenMesh::IO::Options)wopt))
+   {
+      std::cerr << "write error\n";
+     exit(1);
+   }
+
 }
 
 
 void GLWidget::clear(){
 
     mSelected=false;
+
     symbolv.clear();
     skel->clear();
     blobt->Clear();

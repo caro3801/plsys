@@ -7,8 +7,6 @@
 using namespace std;
 struct param;
 
-
-
 static vector<param> parametres(int nbp, ...){
     param p[nbp];
     va_list ap;
@@ -125,14 +123,16 @@ static PLSys* initglsystem(int iteration=0,QObject *parent=0){
 
     axiom.push_back(pu);
     axiom.push_back(pu);
+    axiom.push_back(pu);
     axiom.push_back(pr);
-    axiom.push_back(f);
-    axiom.push_back(rl);
     axiom.push_back(f);
     axiom.push_back(po);
     axiom.push_back(rl);
     axiom.push_back(f);
+    axiom.push_back(po);
+    axiom.push_back(tr);
     axiom.push_back(f);
+
     axiom.push_back(tl);
     axiom.push_back(f2);
     axiom.push_back(pu);

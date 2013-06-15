@@ -19,7 +19,6 @@ HEADERS += icosphere.h \
            GA/SymbolChromosome.h \
            GUI/CellPLSys.h \
            GUI/glwidget.h \
-           GUI/window.h \
            LSys/functions.h \
            LSys/param.h \
            LSys/plsys.h \
@@ -36,7 +35,6 @@ SOURCES += icosphere.cpp \
            GA/SymbolChromosome.cpp \
            GUI/CellPLSys.cpp \
            GUI/glwidget.cpp \
-           GUI/window.cpp \
            LSys/plsys.cpp \
            LSys/rule.cpp \
            LSys/symbol.cpp \

@@ -31,6 +31,7 @@ signals:
 
 private:
     int ID;
+     QHBoxLayout * h;
     GLWidget *mGLWidget;
     QCheckBox * mSelected;
     QPushButton * mExport;

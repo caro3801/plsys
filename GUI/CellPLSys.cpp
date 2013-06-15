@@ -3,6 +3,7 @@
 #include "QHBoxLayout"
 using namespace std;
 
+
 CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent)
 {
     this->ID=id;
@@ -23,7 +24,7 @@ CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent)
 
     QObject::connect(mExport, SIGNAL(clicked()),this->getGLWidget(), SLOT(exportMesh()));
     v= new QVBoxLayout();
-    QHBoxLayout * h= new QHBoxLayout();
+    h= new QHBoxLayout();
     h->addWidget(mSelected);
     h->addWidget(mExport);
     v->addWidget(mGLWidget);
@@ -33,10 +34,12 @@ CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent)
 
 
 CellPLSys::~CellPLSys(){
-    delete mGLWidget;
     delete mSelected;
     delete mExport;
     mSymbolV.clear();
+    delete mGLWidget;
+    delete h;
+    delete v;
 }
 
 GLWidget * CellPLSys::getGLWidget(){

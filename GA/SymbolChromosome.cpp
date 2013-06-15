@@ -69,7 +69,7 @@ SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> symbolV,DoubleD
         switch (c){
         case 'f':
             delta=0.3;
-            mod=1.5;
+            mod=1.;
             break;
         case'[':
             opened++;
@@ -116,7 +116,6 @@ Chromosome* SymbolChromosome::clone()
     lChromosome->mCrossoverMode = this->mCrossoverMode;
 
     lChromosome->mNbGenes = this->mNbGenes;
-    lChromosome->mGenesArray = vector<Gene*>();
     lChromosome->mGenesArray.clear();
 
 
@@ -130,7 +129,7 @@ Chromosome* SymbolChromosome::copy()
     lChromosome->mType = this->mType;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
     lChromosome->mNbGenes = this->mNbGenes;
-    lChromosome->mGenesArray = vector<Gene*>();
+
     lChromosome->mGenesArray.clear();
 
     for (unsigned int i=0 ; i<lChromosome->mNbGenes ; i++)

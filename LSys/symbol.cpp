@@ -4,12 +4,14 @@
 #include <iostream>
 using namespace std;
 struct param;
+
 Symbol::Symbol()
 {
 }
 Symbol::~Symbol()
 {
     this->params.clear();
+
 }
 Symbol::Symbol(char name, vector<param> p)
 {

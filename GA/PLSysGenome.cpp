@@ -28,7 +28,6 @@ PLSysGenome::PLSysGenome():Genome(1)
 PLSysGenome::PLSysGenome(int pSize):Genome(1) {
     this->iter=pSize;
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
-
     this->mTSMap.clear();
     this->mTSMap=this->getPLSys()->mapTS;
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
@@ -61,8 +60,8 @@ PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(1, 1) {
     this->iter=pSize;
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
 
-
     this->mTSMap.clear();
+
     this->mTSMap=this->getPLSys()->mapTS;
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
     addChromosome(new SymbolChromosome(this->plsys->getPllist().size(),this->getPLSys()->getPllist(), turtleDomain,tsNameDomain,mTSMap), 1);
