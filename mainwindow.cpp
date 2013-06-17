@@ -61,6 +61,8 @@ void MainWindow::initPLSys(){
     ui->widgetPLSys->clear();
     ui->spinBoxGeneration->setValue(0);
     iter=ui->spinBoxIteration->value();
+    ui->spinBoxIteration->setEnabled(true);
+
     mPlsys= initglsystem(iter);
     isInit=true;
     isSeeded=false;
