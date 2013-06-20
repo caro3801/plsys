@@ -64,11 +64,6 @@ char Symbol::getName(){
     return this->name;
 }
 
-int Symbol::getNbParams(){
-    return this->nbparams;
-}
-
-
 double Symbol::get(char pnam){
     try{
         if (!this->params.empty()){
@@ -196,10 +191,6 @@ void Symbol::set(double val){
     }
 }
 
-void Symbol::setNbParams(int nbparams){
-    this->nbparams=nbparams;
-}
-
 void Symbol::afficher() {
     cout << this->toString() ;
 }
@@ -221,4 +212,12 @@ string Symbol::toString() {
     return s.toStdString();
 }
 
-
+double Symbol::getMin(){
+    return min;
+}
+double Symbol::getMax(){
+    return max;
+}
+double Symbol::getMod(){
+    return mod;
+}

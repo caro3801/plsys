@@ -1,7 +1,7 @@
 #ifndef SYMBOLCHROMOSOME_H
 #define SYMBOLCHROMOSOME_H
 
-#include "FixedChromosome.h"
+#include "IntFixedChromosome.h"
 #include "plsys.h"
 #include "DoubleDomain.h"
 #include "IntDomain.h"
@@ -15,14 +15,14 @@ class SymbolChromosome : public FixedChromosome
 {
 public:
     SymbolChromosome();
-    SymbolChromosome(int nbSymbol,vector<Symbol*> symbolV, DoubleDomain *turtleDomain, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap );
+    SymbolChromosome(int nbSymbol,vector<Symbol*> &symbolV, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap );
 
     virtual Chromosome* clone();
     virtual Chromosome* copy();
     virtual Chromosome* create();
     virtual bool equals(Chromosome* pChromo);
     virtual void mutate();
-    vector<Symbol *> convertGenesToSymbols(std::vector<Symbol *> mapTS);
+    virtual Chromosome** cross(Chromosome *pParent,int pPoint);
 
 };
 

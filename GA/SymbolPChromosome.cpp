@@ -1,70 +1,85 @@
-#include "SymbolChromosome.h"
+#include "SymbolPChromosome.h"
 #include "IntDomain.h"
 #include "BitGene.h"
 #include "IntGene.h"
 #include "Random.h"
-#include "ComplexGene.h"
-#include "Chromosome.h"
 #include "turtlesymbol.h"
 #include "iostream"
 #include "functions.h"
+static double modulo(double x, double y)
+{
+    /*x modulo y*/
+    x-=y*std::abs(int(x/y));
+    if (x>=0.) return (x);
+    else return (x+y);
+}
 
-
-SymbolChromosome::SymbolChromosome():FixedChromosome()
+SymbolPChromosome::SymbolPChromosome():FixedChromosome()
 {
 }
 
-SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> &symbolV, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap  ):FixedChromosome(nbSymbol){
 
+SymbolPChromosome::SymbolPChromosome(int nbSymbol, vector<Symbol*> &symbolV,DoubleDomain* turtleDomain ):FixedChromosome(nbSymbol){
 
-
-    int opened=0;
     Random *lRandom=NULL;
     lRandom->getInstance();
-    double similarity=0;
 
-    QHash<Symbol *,int> symtable;
-    for (int i=0;i<tsmap.size();++i){
-            symtable.insert(tsmap.at(i),i);
-     }
-
-    SymbolFactory *sf=new SymbolFactory();
+    double similarity=1.;
     for (int i=0; i<nbSymbol;i++){
 
 
-        Symbol * c=symbolV.at(i);
-        IntGene* lGene;
-        if (similarity>lRandom->getDouble()){
-
-            lGene=new IntGene(tsNameDomain,symtable.value(c));
-
-        }else{
-            char k;
-            lGene=new IntGene(tsNameDomain);
-            do {
-                lGene->mutate();
-                k=symtable.key(lGene->get())->getName();
-            }while((k==']' && opened==0));
-            symbolV.at(i)=sf->create(k,c->get(0));
-
+        //double delta=symbolV.at(i)->getMod();
+        //delta=similarity*delta;
+        double dmin=symbolV.at(i)->getMin();
+        double dmax=symbolV.at(i)->getMax();
+        double mod=dmax;
+        double delta=(dmax-dmin)*30./100.;
+        delta*=similarity;
+        double symval=symbolV.at(i)->get(0);
+        dmin=modulo(symval-delta,mod)+dmin;
+        dmax=modulo(symval+delta,mod);
+        if (dmin>dmax){
+            double tmp=dmin;
+            dmin=dmax;
+            dmax=tmp;
         }
-        if(symbolV.at(i)->getName()=='['){
-            opened++;
-        }if(symbolV.at(i)->getName()==']'){
-            opened--;
-        }
-        this->addGene(lGene);
+        turtleDomain->setMin(dmin);
+        turtleDomain->setMax(dmax);
+
+        this->addGene(new DoubleGene(turtleDomain));
     }
 
-    delete sf;
     this->mType = Chromosome::eComposite;
     this->mCrossoverMode = eUniform;
 
 }
 
-Chromosome* SymbolChromosome::clone()
+Chromosome* SymbolPChromosome::create()
 {
-    SymbolChromosome* lChromosome = new SymbolChromosome();
+    Random* lRandom = NULL;
+    lRandom->getInstance();
+
+    SymbolPChromosome* lChromosome = new SymbolPChromosome();
+
+    lChromosome->mType = this->mType;
+    lChromosome->mCrossoverMode = this->mCrossoverMode;
+
+    lChromosome->mGenesArray = vector<Gene*>(this->mGenesArray.size());
+    lChromosome->mGenesArray.clear();
+    lChromosome->mNbGenes = this->mGenesArray.size();
+
+    for (unsigned int i=0 ; i<lChromosome->mNbGenes ; i++)
+    {
+        lChromosome->mGenesArray.push_back(this->mGenesArray[i]->create());
+    }
+
+    return lChromosome;
+}
+
+
+Chromosome* SymbolPChromosome::clone()
+{
+    SymbolPChromosome* lChromosome = new SymbolPChromosome();
 
     lChromosome->mType = this->mType;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
@@ -76,9 +91,9 @@ Chromosome* SymbolChromosome::clone()
     return lChromosome;
 }
 
-Chromosome* SymbolChromosome::copy()
+Chromosome* SymbolPChromosome::copy()
 {
-    SymbolChromosome* lChromosome = new SymbolChromosome();
+    SymbolPChromosome* lChromosome = new SymbolPChromosome();
 
     lChromosome->mType = this->mType;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
@@ -94,9 +109,9 @@ Chromosome* SymbolChromosome::copy()
     return lChromosome;
 }
 
-bool SymbolChromosome::equals(Chromosome* pChromo){
+bool SymbolPChromosome::equals(Chromosome* pChromo){
 
-    SymbolChromosome* lChromo = (SymbolChromosome*)pChromo;
+    SymbolPChromosome* lChromo = (SymbolPChromosome*)pChromo;
 
     int lNbGenesThis = this->mNbGenes;	//this->mGenesArray.size();
     int lNbGenesParam = lChromo->mNbGenes; //lChromo->mGenesArray.size();
@@ -119,38 +134,15 @@ bool SymbolChromosome::equals(Chromosome* pChromo){
 
 
 
-void SymbolChromosome::mutate(){
+void SymbolPChromosome::mutate(){
     Random * lRandom = NULL;
     lRandom->getInstance();
+
     (this->mGenesArray[(int)(lRandom->getDouble()*this->mNbGenes)])->mutate();
 }
 
 
-
-Chromosome* SymbolChromosome::create()
-{
-    Random* lRandom = NULL;
-    lRandom->getInstance();
-
-    SymbolChromosome* lChromosome = new SymbolChromosome();
-
-    lChromosome->mType = this->mType;
-    lChromosome->mCrossoverMode = this->mCrossoverMode;
-
-    lChromosome->mGenesArray = vector<Gene*>(this->mGenesArray.size());
-    lChromosome->mGenesArray.clear();
-    lChromosome->mNbGenes = this->mGenesArray.size();
-
-    for (unsigned int i=0 ; i<lChromosome->mNbGenes ; i++)
-    {
-        lChromosome->mGenesArray.push_back(this->mGenesArray[i]->create());
-    }
-
-    return lChromosome;
-}
-
-
-Chromosome** SymbolChromosome::cross(Chromosome* pParent, int pPoint){
+Chromosome** SymbolPChromosome::cross(Chromosome* pParent, int pPoint){
 
     Chromosome* lChildChromo0;
     Chromosome* lChildChromo1;
@@ -175,4 +167,3 @@ int i;
 
            return lFixedChromos;
 }
-

@@ -1,6 +1,7 @@
 #include "PLSysGenome.h"
 #include "Chromosome.h"
 #include "SymbolChromosome.h"
+#include "SymbolPChromosome.h"
 
 #include "Gene.h"
 #include "ComplexGene.h"
@@ -13,7 +14,6 @@
 #include "DoubleGene.h"
 
 #include "functions.h"
-#include "window.h"
 #include <algorithm>
 #include "iostream"
 
@@ -25,20 +25,22 @@ PLSysGenome::PLSysGenome():Genome(1)
 
 }
 
-PLSysGenome::PLSysGenome(int pSize):Genome(1) {
+PLSysGenome::PLSysGenome(int pSize):Genome(2) {
     this->iter=pSize;
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
     this->mTSMap.clear();
     this->mTSMap=this->getPLSys()->mapTS;
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
+    vector<Symbol *> symbv=this->getPLSys()->getPllist();
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap),1);
 
-    addChromosome(new SymbolChromosome(this->getPLSys()->getPllist().size(),this->getPLSys()->getPllist(), turtleDomain,tsNameDomain,mTSMap),1);
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain),1);
     delete turtleDomain;
     plsysInit=false;
 }
 
 
-PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(1){
+PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(2){
 
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
     for (int i=0;i<(int)symbv.size();i++){
@@ -49,35 +51,41 @@ PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(1){
 
     }
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
-    addChromosome(new SymbolChromosome(symbv.size(),symbv, turtleDomain,tsNameDomain,mTSMap), 1);
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap), 1);
+
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain),1);
     delete turtleDomain;
     plsysInit=false;
 }
 
 
-PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(1, 1) {
-    UNUSED(nbObjectives);
-    this->iter=pSize;
-    DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
+PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(2, 1) {
 
+    this->iter=pSize;
     this->mTSMap.clear();
 
     this->mTSMap=this->getPLSys()->mapTS;
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
-    addChromosome(new SymbolChromosome(this->plsys->getPllist().size(),this->getPLSys()->getPllist(), turtleDomain,tsNameDomain,mTSMap), 1);
+
+    DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
+
+    vector<Symbol *> symbv=this->plsys->getPllist();
+
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap), 1);
+
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain), 1);
 
     delete turtleDomain;
     plsysInit=false;
 }
 
-PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(1){
+PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(2){
 
     //this->plsys=pPLSys;
     delete plsys;
     setPLSys(*pPLSys);
     this->iter=getPLSys()->nbIterations;
     vector<Symbol *> symbv=getPLSys()->getPllist();
-    DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
 
     foreach (Symbol * s, symbv) {
         if(!(std::find(this->mTSMap.begin(), this->mTSMap.end(), s) != this->mTSMap.end())) {
@@ -89,9 +97,11 @@ PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(1){
         cout <<"erreur"<<endl;
     }
     IntDomain* tsNameDomain = new IntDomain(0,s);
-    addChromosome(new SymbolChromosome(symbv.size(),symbv, turtleDomain,tsNameDomain,mTSMap), 1);
+    DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap), 1);
 
-    delete turtleDomain;
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain), 1);
+
     plsysInit=false;
 }
 
@@ -175,7 +185,17 @@ Genome* PLSysGenome::copy() {
 }
 
 vector<Symbol*> PLSysGenome::convertSymbolChromosomeToSymbolVector(){
-    return ((SymbolChromosome*)this->getChromosome(0))->convertGenesToSymbols(mTSMap);
+    int size=(int)((SymbolChromosome*)this->getChromosome(0))->size();
+    vector<Symbol *> lsymbolv;
+    for (int i=0;i<size;i++){
+        int symbol_intval=((IntGene*)((SymbolChromosome*)this->getChromosome(0))->getGene(i))->get();
+
+        double symbol_doubleval=((DoubleGene*)((SymbolPChromosome*)this->getChromosome(1))->getGene(i))->get();
+        lsymbolv.push_back(new Symbol(mTSMap.at(symbol_intval)->getName(),parametres(1,(param){'x',symbol_doubleval})));
+    }
+
+
+    return lsymbolv;
 
 }
 
@@ -203,14 +223,25 @@ void PLSysGenome::fitness(double fitnessVal) {
 }
 
 void PLSysGenome::cross(Genome* pGenome, Genome* pOffspringA, Genome* pOffspringB)
-{
+{    Random* lRandom = NULL;
+     lRandom->getInstance();
+      int taille=this->mChromosomesArray[0]->size();
     if (pOffspringA != NULL && pOffspringB != NULL)
     {
+        int lPoint = (unsigned int)(lRandom->getDouble()*(taille-1)) + 1;
         for (int i=0 ; i<this->mNbChromosomes ; i++)
         {
-            Chromosome** lChromos = (this->mChromosomesArray[i])->cross(pGenome->mChromosomesArray[i]);
-            lChromos[0]=checkHooksConsistency(lChromos[0]);
-            lChromos[1]=checkHooksConsistency(lChromos[1]);
+            Chromosome** lChromos;
+            if (i==0){//sur les symboles pas sur les parametres
+
+                lChromos = ((SymbolChromosome*)this->mChromosomesArray[i])->cross(pGenome->mChromosomesArray[i],lPoint);
+                lChromos[0]=checkHooksConsistency(lChromos[0]);
+                lChromos[1]=checkHooksConsistency(lChromos[1]);
+            }
+            if (i==1){
+                lChromos = ((SymbolPChromosome*)this->mChromosomesArray[i])->cross(pGenome->mChromosomesArray[i],lPoint);
+
+            }
             pOffspringA->mChromosomesArray.push_back(lChromos[0]);
             pOffspringB->mChromosomesArray.push_back(lChromos[1]);
 
@@ -226,12 +257,15 @@ Chromosome *  PLSysGenome::checkHooksConsistency(Chromosome *chrom){
     int opened=0;
 
     for(unsigned int i=0;i<tmpchrom->mNbGenes;i++){
-        char c=mTSMap.at(((IntGene*)((ComplexGene *)tmpchrom->mGenesArray[i])->getGene(0))->get())->getName();
+        char c=mTSMap.at(((IntGene *)tmpchrom->mGenesArray[i])->get())->getName();
+
         if(c==']'){
+
             do{
-                ((ComplexGene *)tmpchrom->mGenesArray[i])->getGene(0)->mutate();
-                c=mTSMap.at(((IntGene*)((ComplexGene *)tmpchrom->mGenesArray[i])->getGene(0))->get())->getName();
+                ((IntGene *)tmpchrom->mGenesArray[i])->mutate();
+                c=mTSMap.at(((IntGene*)tmpchrom->mGenesArray[i])->get())->getName();
             }while(c==']' && opened==0);
+
             if(opened>0){
                 opened--;
             }

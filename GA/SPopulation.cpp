@@ -611,10 +611,10 @@ void SPopulation::crossoverSimpleSelection()
         }
         for (int i=0;i<mOffsprings[lCpt]->size();i++){
             for (unsigned int j=0;j<mOffsprings[lCpt]->getChromosome(i)->size();j++){
-                if ( lRandom->getDouble()<this->mMutationRate){
-                    ((ComplexGene *)mOffsprings[lCpt]->getChromosome(i)->getGene(j))->getGene(1)->mutate();
+               /* if ( lRandom->getDouble()<this->mMutationRate){
+                    mOffsprings[lCpt]->getChromosome(i)->getGene(j)->mutate();
                     mChangesArray[lCpt] = true;
-                }
+                }*/
             }
         }
 

@@ -27,7 +27,12 @@ HEADERS += icosphere.h \
            LSys/turtle.h \
            LSys/turtlecore.h \
     GA/SPopulation.h \
-    mainwindow.h
+    mainwindow.h \
+    GA/SymbolPChromosome.h \
+    LSys/symbolforward.h \
+    LSys/symbolangle.h \
+    LSys/symbolstack.h \
+    LSys/symbolfactory.h
 
 SOURCES += icosphere.cpp \
            main.cpp \
@@ -41,7 +46,12 @@ SOURCES += icosphere.cpp \
            LSys/turtle.cpp \
            LSys/turtlecore.cpp \
     GA/SPopulation.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    GA/SymbolPChromosome.cpp \
+    LSys/symbolforward.cpp \
+    LSys/symbolangle.cpp \
+    LSys/symbolstack.cpp \
+    LSys/symbolfactory.cpp
 
 
 INCLUDEPATH += /opt/local/include

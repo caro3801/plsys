@@ -13,38 +13,41 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setNbCells(ui->spinBoxNbCells->value());
+    //4cells
+    this->on_action4_triggered();
+
     mutRate=0.10;
-    nbCross=ui->spinBoxNbCells->value()/3;
+    nbCross=nbCells/3;
     updateGeneticOperators();
     isInit=false;
     isSeeded=false;
     iter=0;
     mPlsys= 0;
     slotsinitialisation();
+    initPLSys();
 
 
 }
 void MainWindow::slotsinitialisation(){
 
-    connect(ui->spinBoxNbCells, SIGNAL(valueChanged(int)), this, SLOT(setNbCells(int)));
+   // connect(ui->spinBoxNbCells, SIGNAL(valueChanged(int)), this, SLOT(setNbCells(int)));
 
-    connect(ui->pushButtonInitPLSys, SIGNAL(clicked(bool)), this, SLOT(initPLSys()));
+    //connect(ui->pushButtonInitPLSys, SIGNAL(clicked(bool)), this, SLOT(initPLSys()));
 
     connect(ui->pushButtonSeedAG, SIGNAL(clicked(bool)), this, SLOT(seedAG()));
     connect(ui->pushButtonEvolveAG, SIGNAL(clicked(bool)), this, SLOT(newgeneration()));
 
     //maj mutation rate et cross rate
     connect(ui->horizontalSliderCrossover, SIGNAL(valueChanged(int)),this,SLOT(setCrossoverRate(int)));
-    connect(ui->horizontalSliderMutations, SIGNAL(valueChanged(int)),this,SLOT(setMutationRate(int)));
+    connect(ui->horizontalSliderMutation, SIGNAL(valueChanged(int)),this,SLOT(setMutationRate(int)));
 
     //orientation pour le plsys
-    connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setXRotation(int)));
+   /* connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setXRotation(int)));
     connect(ui->widgetPLSys, SIGNAL(xRotationChanged(int)),ui->horizontalSliderX , SLOT(setValue(int)));
     connect(ui->horizontalSliderY, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setYRotation(int)));
     connect(ui->widgetPLSys, SIGNAL(yRotationChanged(int)), ui->horizontalSliderY, SLOT(setValue(int)));
     connect(ui->horizontalSliderZ, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setZRotation(int)));
-    connect(ui->widgetPLSys, SIGNAL(zRotationChanged(int)), ui->horizontalSliderZ, SLOT(setValue(int)));
+    connect(ui->widgetPLSys, SIGNAL(zRotationChanged(int)), ui->horizontalSliderZ, SLOT(setValue(int)));*/
 
     connect(ui->spinBoxIteration, SIGNAL(valueChanged(int)), this, SLOT(iteration(int)));
 
@@ -71,7 +74,7 @@ void MainWindow::initPLSys(){
     ui->pushButtonSeedAG->setEnabled(true);
     ui->spinBoxGeneration->setEnabled(true);
     ui->labelMutRate->setEnabled(true);
-    ui->horizontalSliderMutations->setEnabled(true);
+    ui->horizontalSliderMutation->setEnabled(true);
     ui->labelCrossRate->setEnabled(true);
     ui->horizontalSliderCrossover->setEnabled(true);
     ui->pushButtonEvolveAG->setEnabled(false);
@@ -107,7 +110,7 @@ void MainWindow::setNbCells(int val){
         delete child;
     }
 
-    nbCells=ui->spinBoxNbCells->value();
+    //nbCells=ui->spinBoxNbCells->value();
     int row,col=0;
     for (int i=0;i<nbCells;i++){
         //mCells.push_back(new CellPLSys(i,pop->getGenomesSymbolsArray().at(i)));
@@ -122,56 +125,47 @@ void MainWindow::setNbCells(int val){
         }
         if(row ==0 && i!=0) col++;
         ui->gridLayoutCells->addLayout(mCells[i]->v,row,col);
-        GLWidget* tmp=mCells.at(i)->getGLWidget();
-        connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), tmp, SLOT(setXRotation(int)));
+        //GLWidget* tmp=mCells.at(i)->getGLWidget();
+        /*connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), tmp, SLOT(setXRotation(int)));
         connect(tmp, SIGNAL(xRotationChanged(int)),ui->horizontalSliderX , SLOT(setValue(int)));
         connect(ui->horizontalSliderY, SIGNAL(valueChanged(int)), tmp, SLOT(setYRotation(int)));
         connect(tmp, SIGNAL(yRotationChanged(int)), ui->horizontalSliderY, SLOT(setValue(int)));
         connect(ui->horizontalSliderZ, SIGNAL(valueChanged(int)), tmp, SLOT(setZRotation(int)));
-        connect(tmp, SIGNAL(zRotationChanged(int)), ui->horizontalSliderZ, SLOT(setValue(int)));
+        connect(tmp, SIGNAL(zRotationChanged(int)), ui->horizontalSliderZ, SLOT(setValue(int)));*/
         //! [0]
     }
 
     ui->pushButtonEvolveAG->setEnabled(false);
     updateGeneticOperators();
+    ui->statusBar->setToolTip("test");
 
 }
 
 void MainWindow::iteration(int iteration){
-    cout <<iteration<<endl;
+
     if (isInit && this->iter!=iteration){
         mPlsys->setIteration(iteration);
         this->iter=mPlsys->nbIterations;
         this->mPlsys->afficher(this->mPlsys->getPllist(),this->mPlsys->nbIterations);
     }
 
-  /*  if (isSeeded){
-        delete mg;
-        delete pop;
-        initGA();
-    }*/
-    //ui->widgetPLSys->update();
     updatePLSysWidget();
     ui->pushButtonEvolveAG->setEnabled(false);
-    /*if(isSeeded){
-        delete mg;
-        delete pop;
-        //initGA();
-        //updateCells();
-    }*/
+
 }
+
 
 void MainWindow::setMutationRate(int val){
     this->mutRate=val;
 }
 void MainWindow::setCrossoverRate(int val){
     this->nbCross=val;
+    this->crossRate=(double)nbCross/(double)nbCells;
 }
 
 void MainWindow::seedAG(){
     params = new GAParameter("toto");
     params->setSelection(GAParameter::eSimpleSelection);
-    this->crossRate=(double)nbCross/(double)nbCells;
 
     params->setCrossoverRate((double)this->crossRate);
     params->setMutationRate((double)this->mutRate/100);
@@ -193,7 +187,8 @@ void MainWindow::initGA(){
 
 
 void MainWindow::newgeneration(){
-
+    params->setMutationRate(this->mutRate);
+    params->setCrossoverRate(this->crossRate);
     this->pop->mSelected.clear();
     for (int i=0;i<nbCells;i++){
         if (this->mCells[i]->isSelected()){
@@ -210,10 +205,32 @@ void MainWindow::newgeneration(){
 
 
 void MainWindow::updateGeneticOperators(){
-    ui->horizontalSliderMutations->setValue(mutRate*100);
+    ui->horizontalSliderMutation->setValue(mutRate*100);
     ui->horizontalSliderCrossover->setMaximum(nbCells);
     ui->horizontalSliderCrossover->setValue(nbCross);
 }
 
 
 
+
+void MainWindow::on_action4_triggered()
+{
+    nbCells=4;
+    setNbCells(nbCells);
+    statusBar()->showMessage(tr("4 shapes"));
+}
+
+void MainWindow::on_action9_triggered()
+{
+    nbCells=9;
+    setNbCells(nbCells);
+
+    statusBar()->showMessage(tr("9 shapes"));
+}
+void MainWindow::on_action16_triggered()
+{
+    nbCells=16;
+    setNbCells(nbCells);
+
+    statusBar()->showMessage(tr("16 shapes"));
+}

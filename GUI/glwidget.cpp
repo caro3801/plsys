@@ -293,15 +293,15 @@ void GLWidget::prepareImplicitSurface(){
                     plop += 25.;
                 cur_vh = new SkelVHandle(pp, 1.0, op_node, skel);
 
+                /*double weight=1.;
+
+
                 Random * r=NULL;
                 r->getInstance();
-                double weight;
-
-
                 weight=1-r->getDouble()*0.5;
 
                 cur_vh->set_weight(weight);
-                delete r;
+                delete r;*/
                 SkelHSegment* seg = SkelHSegment::Create(*skel, last_vh, cur_vh, *static_cast<Convol::CompactPolynomial6T<AppTraits>* >(kernel));
                 last_vh = cur_vh;
 
