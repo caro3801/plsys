@@ -40,6 +40,9 @@ private:
     SPopulation * pop;
 
     bool isSeeded;
+    bool isSymbols;
+    bool isParameters;
+    double similarity;
 
 
     double crossRate;
@@ -53,8 +56,6 @@ public slots:
     void updatePLSysWidget();
     void updateCells();
     void setNbCells(int val);
-    void setMutationRate(int val);
-    void setCrossoverRate(int val);
 
     void initGA();
     void newgeneration();
@@ -63,6 +64,11 @@ private slots:
     void on_action4_triggered();
     void on_action9_triggered();
     void on_action16_triggered();
+    void on_checkBoxSymbols_clicked();
+    void on_checkBoxParameters_clicked();
+    void on_horizontalSliderSimilarity_valueChanged(int value);
+    void on_horizontalSliderCrossover_valueChanged(int value);
+    void on_horizontalSliderMutation_valueChanged(int value);
 };
 
 #endif // MAINWINDOW_H

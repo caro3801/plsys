@@ -14,8 +14,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //4cells
+    this->on_horizontalSliderSimilarity_valueChanged((double)ui->horizontalSliderSimilarity->value());
+    this->on_horizontalSliderCrossover_valueChanged(ui->horizontalSliderCrossover->value());
+    this->on_horizontalSliderMutation_valueChanged(ui->horizontalSliderMutation->value());
     this->on_action4_triggered();
-
+    isSymbols=ui->checkBoxSymbols->isChecked();
+    isParameters=ui->checkBoxParameters->isChecked();
     mutRate=0.10;
     nbCross=nbCells/3;
     updateGeneticOperators();
@@ -30,24 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 void MainWindow::slotsinitialisation(){
 
-   // connect(ui->spinBoxNbCells, SIGNAL(valueChanged(int)), this, SLOT(setNbCells(int)));
-
-    //connect(ui->pushButtonInitPLSys, SIGNAL(clicked(bool)), this, SLOT(initPLSys()));
-
     connect(ui->pushButtonSeedAG, SIGNAL(clicked(bool)), this, SLOT(seedAG()));
     connect(ui->pushButtonEvolveAG, SIGNAL(clicked(bool)), this, SLOT(newgeneration()));
 
-    //maj mutation rate et cross rate
-    connect(ui->horizontalSliderCrossover, SIGNAL(valueChanged(int)),this,SLOT(setCrossoverRate(int)));
-    connect(ui->horizontalSliderMutation, SIGNAL(valueChanged(int)),this,SLOT(setMutationRate(int)));
-
-    //orientation pour le plsys
-   /* connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setXRotation(int)));
-    connect(ui->widgetPLSys, SIGNAL(xRotationChanged(int)),ui->horizontalSliderX , SLOT(setValue(int)));
-    connect(ui->horizontalSliderY, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setYRotation(int)));
-    connect(ui->widgetPLSys, SIGNAL(yRotationChanged(int)), ui->horizontalSliderY, SLOT(setValue(int)));
-    connect(ui->horizontalSliderZ, SIGNAL(valueChanged(int)), ui->widgetPLSys, SLOT(setZRotation(int)));
-    connect(ui->widgetPLSys, SIGNAL(zRotationChanged(int)), ui->horizontalSliderZ, SLOT(setValue(int)));*/
 
     connect(ui->spinBoxIteration, SIGNAL(valueChanged(int)), this, SLOT(iteration(int)));
 
@@ -92,13 +81,9 @@ void MainWindow::updateCells(){
 void MainWindow::updatePLSysWidget()
 {
     ui->widgetPLSys->setSymbolVector(mPlsys->getPllist());
-    /*for(int i=0; i < nbCells;i++){
-        mCells.at(i)->clear();
-    }*/
 }
 
 void MainWindow::setNbCells(int val){
-    //QToolTip::showText(QCursor::pos(),tr("Nb Individus : ") % QString::number(val));
     //remove widget in glLayout
     foreach (CellPLSys *p, mCells) {
         delete p;
@@ -113,7 +98,6 @@ void MainWindow::setNbCells(int val){
     //nbCells=ui->spinBoxNbCells->value();
     int row,col=0;
     for (int i=0;i<nbCells;i++){
-        //mCells.push_back(new CellPLSys(i,pop->getGenomesSymbolsArray().at(i)));
         mCells.push_back(new CellPLSys(i,vector<Symbol*>()));
 
         if (nbCells%4==0 && nbCells!=4){
@@ -125,13 +109,6 @@ void MainWindow::setNbCells(int val){
         }
         if(row ==0 && i!=0) col++;
         ui->gridLayoutCells->addLayout(mCells[i]->v,row,col);
-        //GLWidget* tmp=mCells.at(i)->getGLWidget();
-        /*connect(ui->horizontalSliderX, SIGNAL(valueChanged(int)), tmp, SLOT(setXRotation(int)));
-        connect(tmp, SIGNAL(xRotationChanged(int)),ui->horizontalSliderX , SLOT(setValue(int)));
-        connect(ui->horizontalSliderY, SIGNAL(valueChanged(int)), tmp, SLOT(setYRotation(int)));
-        connect(tmp, SIGNAL(yRotationChanged(int)), ui->horizontalSliderY, SLOT(setValue(int)));
-        connect(ui->horizontalSliderZ, SIGNAL(valueChanged(int)), tmp, SLOT(setZRotation(int)));
-        connect(tmp, SIGNAL(zRotationChanged(int)), ui->horizontalSliderZ, SLOT(setValue(int)));*/
         //! [0]
     }
 
@@ -155,13 +132,6 @@ void MainWindow::iteration(int iteration){
 }
 
 
-void MainWindow::setMutationRate(int val){
-    this->mutRate=val;
-}
-void MainWindow::setCrossoverRate(int val){
-    this->nbCross=val;
-    this->crossRate=(double)nbCross/(double)nbCells;
-}
 
 void MainWindow::seedAG(){
     params = new GAParameter("toto");
@@ -233,4 +203,46 @@ void MainWindow::on_action16_triggered()
     setNbCells(nbCells);
 
     statusBar()->showMessage(tr("16 shapes"));
+}
+
+
+
+void MainWindow::on_checkBoxSymbols_clicked()
+{
+    isSymbols;
+    isParameters;
+}
+
+void MainWindow::on_checkBoxParameters_clicked()
+{
+
+}
+
+
+
+void MainWindow::on_horizontalSliderSimilarity_valueChanged(int value)
+{
+    similarity=(double)value/10.;
+    ui->labelSimilarity->setText(QString("%1%2%3%4").arg("Similarity ","(",QString::number(similarity),")"));
+    statusBar()->showMessage(QString("%1%2").arg("Similarity: ",QString::number(similarity)));
+}
+
+void MainWindow::on_horizontalSliderCrossover_valueChanged(int value)
+{
+
+    this->nbCross=value;
+    this->crossRate=(double)nbCross/(double)nbCells;
+
+    ui->labelCrossRate->setText(QString("%1%2%3%4").arg("Crossovers : ",QString::number(nbCross),"/",QString::number(nbCells)));
+    statusBar()->showMessage(QString("%1%2%3%4").arg("Crossovers : ",QString::number(nbCross),"/",QString::number(nbCells)));
+
+}
+
+void MainWindow::on_horizontalSliderMutation_valueChanged(int value)
+{
+
+    this->mutRate=value;
+
+    ui->labelMutRate->setText(QString("%1%2%3").arg("Mutation rate: ",QString::number(mutRate),"%"));
+    statusBar()->showMessage(QString("%1%2%3").arg("Mutation rate : ",QString::number(mutRate),"%"));
 }

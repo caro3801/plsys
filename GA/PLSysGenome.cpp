@@ -255,26 +255,18 @@ void PLSysGenome::cross(Genome* pGenome, Genome* pOffspringA, Genome* pOffspring
 Chromosome *  PLSysGenome::checkHooksConsistency(Chromosome *chrom){
     Chromosome * tmpchrom=chrom;
     int opened=0;
-
     for(unsigned int i=0;i<tmpchrom->mNbGenes;i++){
         char c=mTSMap.at(((IntGene *)tmpchrom->mGenesArray[i])->get())->getName();
-
-        if(c==']'){
-
-            do{
-                ((IntGene *)tmpchrom->mGenesArray[i])->mutate();
-                c=mTSMap.at(((IntGene*)tmpchrom->mGenesArray[i])->get())->getName();
-            }while(c==']' && opened==0);
-
-            if(opened>0){
-                opened--;
-            }
+        while (c==']' && opened==0){
+            ((IntGene *)tmpchrom->mGenesArray[i])->mutate();
+            c=mTSMap.at(((IntGene*)tmpchrom->mGenesArray[i])->get())->getName();
         }
         if(c=='['){
             opened++;
         }
-
-
+        if(opened>0 && c==']'){
+            opened--;
+        }
     }
     return tmpchrom;
 }

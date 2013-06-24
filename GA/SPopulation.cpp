@@ -1,12 +1,12 @@
 /*
  *  OOGA_CPP
- *  2001-2009 by StéŽphane Sanchez, Alain Berro, HervŽé Luga and Yves Duthen
+ *  2001-2009 by Stï¿½ï¿½phane Sanchez, Alain Berro, Hervï¿½ï¿½ Luga and Yves Duthen
  *
  *
  *  Contact:
  *  Institut de Recherche en Informatique de Toulouse (IRIT)
  *  Equipe Visual Objects : from Reality To EXpression (VORTEX)
- *  UniversitŽ Toulouse 1 Sciences Sociales (IRIT-UT1)
+ *  Universitï¿½ Toulouse 1 Sciences Sociales (IRIT-UT1)
  *  http://www.irit.fr/-Equipe-VORTEX-
  *
  */
@@ -19,8 +19,11 @@
 #include "GAParameter.h"
 #include "Genome.h"
 #include "Chromosome.h"
+#include "DoubleGene.h"
+#include "DoubleDomain.h"
 #include "IntGene.h"
 #include "Gene.h"
+#include "math.h"
 
 #include "Parser.h"
 #include "PopulationParser.h"
@@ -53,17 +56,17 @@ using namespace std;
 /******************************************************************************
  * Construit une Population vide.
  *
- * Ce constructeur intialise le gŽnome de rŽfŽrence, la taille de la
- * Population et les paramŽtres d'Žvolution mais il ne crŽe pas
+ * Ce constructeur intialise le gï¿½nome de rï¿½fï¿½rence, la taille de la
+ * Population et les paramï¿½tres d'ï¿½volution mais il ne crï¿½e pas
  * les individus de cette Population.
  *
- * Le <b>gŽnome de rŽfŽrence</b> est le gŽnome qui va servir à crŽer toute
- * la Population. Chaque individu aura une structure gŽnŽtique
- * identique au gŽnome de rŽfŽrence.
+ * Le <b>gï¿½nome de rï¿½fï¿½rence</b> est le gï¿½nome qui va servir ï¿½ crï¿½er toute
+ * la Population. Chaque individu aura une structure gï¿½nï¿½tique
+ * identique au gï¿½nome de rï¿½fï¿½rence.
  *
- * @param	g		Genome de rŽfŽrence
+ * @param	g		Genome de rï¿½fï¿½rence
  * @param	taille	taille de la population
- * @param	p		ensemble des paramŽtres d'Žvolution
+ * @param	p		ensemble des paramï¿½tres d'ï¿½volution
  *
  *****************************************************************************/
 SPopulation::SPopulation( PLSysGenome* pGenome, int pSize, GAParameter* pGAParameter,int iter)
@@ -159,9 +162,9 @@ void SPopulation::clearGenomeArray()
 
 
 /*****************************************************************************
- * Initialise alŽatoirement les individus de la population.
+ * Initialise alï¿½atoirement les individus de la population.
  *
- * Cette mŽthode crŽe et d'initialise alŽatoirement
+ * Cette mï¿½thode crï¿½e et d'initialise alï¿½atoirement
  * les individus de la Population.
  *
  *****************************************************************************/
@@ -244,9 +247,9 @@ void SPopulation::initFitness() //initFitness(int[] tableauNoteFitness)
 
 
 /*****************************************************************************
- * Ajoute un individu à la Population.
+ * Ajoute un individu ï¿½ la Population.
  *
- * Cette mŽthode crŽe un nouvel individu alŽatoirement, l'ajoute à la
+ * Cette mï¿½thode crï¿½e un nouvel individu alï¿½atoirement, l'ajoute ï¿½ la
  * Population et calcule sa fitness.
  *
  *****************************************************************************/
@@ -313,7 +316,7 @@ void SPopulation::fitnessPopulation()
 
 
 /******************************************************************************
- * intialisation des donnŽes relatives ˆ la gŽnŽration de la nouvelle population
+ * intialisation des donnï¿½es relatives ï¿½ la gï¿½nï¿½ration de la nouvelle population
  ******************************************************************************/
 void SPopulation::initGeneration()
 {
@@ -339,7 +342,7 @@ void SPopulation::initGeneration()
 
     this->mSurvived = new bool[this->mNbGenomes];
 
-    this->mChangesArray = new bool[this->mMatingSize];	// Tableau d'Žtats des individus
+    this->mChangesArray = new bool[this->mMatingSize];	// Tableau d'ï¿½tats des individus
 
     for (int i=0; i<this->mNbGenomes; i++)
     {
@@ -363,7 +366,7 @@ void SPopulation::selectionGA()
 
     double* lNotesArray = new double[this->mNbGenomes];	// Tableau des notes des Individus
     double* lShareArray = new double[this->mNbGenomes];	// Tableau des "niche count" des individus
-    double* lSumArray = new double[this->mNbGenomes];	// Tableau des sommes pour la roulette pipŽe
+    double* lSumArray = new double[this->mNbGenomes];	// Tableau des sommes pour la roulette pipï¿½e
 
     int* lResultArray = new int[this->mNbGenomes];
 
@@ -398,7 +401,7 @@ void SPopulation::selectionGA()
     }
 
 
-    //----- Initialisation des modes de sŽlection
+    //----- Initialisation des modes de sï¿½lection
     switch
             (this->mSelection)
     {
@@ -454,7 +457,7 @@ void SPopulation::selectionGA()
         break;
     }
 
-    //----- SŽlection : Passage ˆ la population this ˆ mating pool
+    //----- Sï¿½lection : Passage ï¿½ la population this ï¿½ mating pool
     i = this->mMatingSize;
 
     switch(this->mSelection)
@@ -609,20 +612,21 @@ void SPopulation::crossoverSimpleSelection()
             //  mOffsprings[lCpt]->mutate();
             mSurvived[mMatingPool[lIndexParent1]] = true;
         }
-        for (int i=0;i<mOffsprings[lCpt]->size();i++){
-            for (unsigned int j=0;j<mOffsprings[lCpt]->getChromosome(i)->size();j++){
-               /* if ( lRandom->getDouble()<this->mMutationRate){
-                    mOffsprings[lCpt]->getChromosome(i)->getGene(j)->mutate();
-                    mChangesArray[lCpt] = true;
-                }*/
-            }
-        }
+        //for (int i=0;i<mOffsprings[lCpt]->size();i++){
+
+
+
+
+
+        //}
 
         lCpt++;
 
 
     }
 
+    //mutation
+    lCpt=0;
 
 
 }
@@ -639,18 +643,65 @@ void SPopulation::mutation()
     {
         if ( lRandom->getDouble() < this->mMutationRate )
         {
-            if (!mChangesArray[i]){
+            /*if (!mChangesArray[i]){
 
                 mOffsprings[i]->mutate();
                 mChangesArray[i] = true;
+            }*/
+
+            for (unsigned int j=0;j<mOffsprings[i]->getChromosome(0)->size();j++){
+
+
+
+                //mutation symbole
+                mOffsprings[i]->getChromosome(0)->getGene(j)->mutate();
+
+                //hooks
+                Chromosome * tmpchrom=mOffsprings[i]->getChromosome(0);
+                int opened=0;
+                for(unsigned int k=0;k<tmpchrom->mNbGenes;k++){
+                    char c=((PLSysGenome*)mOffsprings[i])->mTSMap.at(((IntGene *)tmpchrom->mGenesArray[k])->get())->getName();
+                    while (c==']' && opened==0){
+                        ((IntGene *)tmpchrom->mGenesArray[k])->mutate();
+                        c=((PLSysGenome*)mOffsprings[i])->mTSMap.at(((IntGene*)tmpchrom->mGenesArray[k])->get())->getName();
+                    }
+                    if(c=='['){
+                        opened++;
+                    }
+                    if(opened>0 && c==']'){
+                        opened--;
+                    }
+                }
+                mOffsprings[i]->setChromosome(tmpchrom,0);
+
+                //mutation parametres
+                int tmpint=((IntGene *)tmpchrom->mGenesArray[j])->get();
+                PLSysGenome * tmpgen=(PLSysGenome*)mOffsprings[i];
+                Symbol * tmpsym=tmpgen->mTSMap.at(tmpint);
+                ((DoubleGene *)mOffsprings[i]->getChromosome(1)->getGene(j))->getDomain()->setMax(tmpsym->getMax());
+                ((DoubleGene *)mOffsprings[i]->getChromosome(1)->getGene(j))->getDomain()->setMin(tmpsym->getMin());
+                ((DoubleGene *)mOffsprings[i]->getChromosome(1)->getGene(j))->getDomain()->setRadius(tmpsym->getMod());
+
+                //to fix
+                if (tmpsym->getName()=='f' && ((DoubleGene *)mOffsprings[i]->getChromosome(1)->getGene(j))->get()>5){
+                    ((DoubleGene *)mOffsprings[i]->getChromosome(1)->getGene(j))->set(lRandom->getDouble2()+0.2);
+                }else{
+                    ((DoubleGene *)mOffsprings[i]->getChromosome(1)->getGene(j))->mutate();
+                }
+
+
             }
+
+            mChangesArray[i] = true;
+
+
         }
     }
 }
 
 
 /******************************************************************************
- * passage ˆ la nouvelle gŽnŽration
+ * passage ï¿½ la nouvelle gï¿½nï¿½ration
  ******************************************************************************/
 void SPopulation::replacement()
 {
@@ -663,7 +714,7 @@ void SPopulation::replacement()
 
             lGenome = mOffsprings[i];
 
-            /*----- Passage de pp ˆ this -----*/
+            /*----- Passage de pp ï¿½ this -----*/
             if ( ! mSurvived[i]	)
             {
                 delete this->mGenomesArray[i];
@@ -692,7 +743,7 @@ void SPopulation::replacement()
         {
             lGenome = mOffsprings[j];
 
-            /*----- Passage de pp ˆ this -----*/
+            /*----- Passage de pp ï¿½ this -----*/
             if
                     ( ! mSurvived[lSortedPop[j]]	)
             {
@@ -712,7 +763,7 @@ void SPopulation::replacement()
 
 
 /*****************************************************************************
- * Passage ˆà la gŽŽnŽŽration suivante.
+ * Passage ï¿½ï¿½ la gï¿½ï¿½nï¿½ï¿½ration suivante.
  *****************************************************************************/
 void SPopulation::generation()
 {
@@ -725,7 +776,7 @@ void SPopulation::generation()
 
     Genome* lBestIndividual = NULL;
 
-    /*----- Mise ˆà jour des paramŽtres de l'algorithme -----*/
+    /*----- Mise ï¿½ï¿½ jour des paramï¿½tres de l'algorithme -----*/
 
     this->updateGAParameter();
 
@@ -738,7 +789,7 @@ void SPopulation::generation()
         mSurvived[this->mMaxPosition] = false;
     }
 
-    /*----- MŽthode de sŽlection -----*/
+    /*----- Mï¿½thode de sï¿½lection -----*/
 
     time(&lTime);
     this->mDurations[1] = lTime;
@@ -746,7 +797,7 @@ void SPopulation::generation()
     this->selection();
 
 
-    /*----- Croisement : Passage de la population p1 ˆ p2 -----*/
+    /*----- Croisement : Passage de la population p1 ï¿½ p2 -----*/
 
     time(&lTime);
     this->mDurations[2] = lTime;
@@ -763,14 +814,14 @@ void SPopulation::generation()
     this->mutation();
 
 
-    /*----- Mise ˆ jour de la population et notation -----*/
+    /*----- Mise ï¿½ jour de la population et notation -----*/
     time(&lTime);
     this->mDurations[4] = lTime;
 
     this->replacement();
 
 
-    /*----- Copie du meilleur dans la gŽnŽration suivante -----*/
+    /*----- Copie du meilleur dans la gï¿½nï¿½ration suivante -----*/
     if
             ( this->mElitism )
     {
@@ -785,7 +836,7 @@ void SPopulation::generation()
     //     this->setGenomesSymbolsArray();
     //     this->fitnessPopulation(); //en attente reponse client TODO
 
-    /*----- Calculs statistiques et durŽe de la gŽnŽration -----*/
+    /*----- Calculs statistiques et durï¿½e de la gï¿½nï¿½ration -----*/
     time(&lTime);
     this->mDurations[5] = lTime;
 
