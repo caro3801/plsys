@@ -49,26 +49,28 @@ private:
     double mutRate;
     int nbCross;
 
-
-public slots:
-    void initPLSys();
-    void iteration(int iteration);
-    void updatePLSysWidget();
+    void newgeneration();
     void updateCells();
+    void initPLSys();
+    void initGA();
+    void seedAG();
+    void updateGenome();
+    void iteration(int iteration);
+public slots:
+    void updatePLSysWidget();
     void setNbCells(int val);
 
-    void initGA();
-    void newgeneration();
-    void seedAG();
 private slots:
     void on_action4_triggered();
     void on_action9_triggered();
     void on_action16_triggered();
-    void on_checkBoxSymbols_clicked();
-    void on_checkBoxParameters_clicked();
-    void on_horizontalSliderSimilarity_valueChanged(int value);
     void on_horizontalSliderCrossover_valueChanged(int value);
     void on_horizontalSliderMutation_valueChanged(int value);
+    void on_pushButtonEvolveAG_clicked();
+    void on_pushButtonSeedAG_clicked();
+    void on_checkBoxSymbols_clicked(bool checked);
+    void on_checkBoxParameters_clicked(bool checked);
+    void on_spinBoxIteration_valueChanged(int arg1);
 };
 
 #endif // MAINWINDOW_H

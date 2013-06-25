@@ -14,44 +14,43 @@ SymbolChromosome::SymbolChromosome():FixedChromosome()
 {
 }
 
-SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> &symbolV, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap  ):FixedChromosome(nbSymbol){
+SymbolChromosome::SymbolChromosome(int nbSymbol, vector<Symbol*> &symbolV, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap  , bool pOnSym)
+    :FixedChromosome(nbSymbol){
 
 
-
+    this->mOnSym=pOnSym;
     int opened=0;
     Random *lRandom=NULL;
     lRandom->getInstance();
-    double similarity=0;
 
     QHash<Symbol *,int> symtable;
     for (int i=0;i<tsmap.size();++i){
-            symtable.insert(tsmap.at(i),i);
-     }
+        symtable.insert(tsmap.at(i),i);
+    }
 
     SymbolFactory *sf=new SymbolFactory();
     for (int i=0; i<nbSymbol;i++){
-
-
         Symbol * c=symbolV.at(i);
         IntGene* lGene;
-        if (similarity>lRandom->getDouble()){
-
+        if (mOnSym){
             lGene=new IntGene(tsNameDomain,symtable.value(c));
-
         }else{
-            char k;
-            lGene=new IntGene(tsNameDomain);
-            do {
-                lGene->mutate();
-                k=symtable.key(lGene->get())->getName();
-            }while((k==']' && opened==0));
-            symbolV.at(i)=sf->create(k,c->get(0));
 
-        }
-        if(symbolV.at(i)->getName()=='['){
-            opened++;
-        }if(symbolV.at(i)->getName()==']'){
-            opened--;
+
+                char k;
+                lGene=new IntGene(tsNameDomain);
+                do {
+                    lGene->mutate();
+                    k=symtable.key(lGene->get())->getName();
+                }while((k==']' && opened==0));
+                symbolV.at(i)=sf->create(k,c->get(0));
+
+
+            if(symbolV.at(i)->getName()=='['){
+                opened++;
+            }if(symbolV.at(i)->getName()==']'){
+                opened--;
+            }
         }
         this->addGene(lGene);
     }
@@ -81,6 +80,7 @@ Chromosome* SymbolChromosome::copy()
     SymbolChromosome* lChromosome = new SymbolChromosome();
 
     lChromosome->mType = this->mType;
+    lChromosome->mOnSym = this->mOnSym;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
     lChromosome->mNbGenes = this->mNbGenes;
 
@@ -135,6 +135,7 @@ Chromosome* SymbolChromosome::create()
     SymbolChromosome* lChromosome = new SymbolChromosome();
 
     lChromosome->mType = this->mType;
+    lChromosome->mOnSym = this->mOnSym;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
 
     lChromosome->mGenesArray = vector<Gene*>(this->mGenesArray.size());
@@ -156,23 +157,23 @@ Chromosome** SymbolChromosome::cross(Chromosome* pParent, int pPoint){
     Chromosome* lChildChromo1;
     lChildChromo0 = this->clone();
     lChildChromo1 = this->clone();
-int i;
+    int i;
     for (i=0 ; i<pPoint ; i++)
-           {
+    {
 
-               lChildChromo0->mGenesArray.push_back(this->mGenesArray[i]->copy());
-               lChildChromo1->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
-           }
-           for (i=pPoint ; i<this->mNbGenes ; i++)
-           {
-               lChildChromo0->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
-               lChildChromo1->mGenesArray.push_back(this->mGenesArray[i]->copy());
-           }
+        lChildChromo0->mGenesArray.push_back(this->mGenesArray[i]->copy());
+        lChildChromo1->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
+    }
+    for (i=pPoint ; i<this->mNbGenes ; i++)
+    {
+        lChildChromo0->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
+        lChildChromo1->mGenesArray.push_back(this->mGenesArray[i]->copy());
+    }
 
-           Chromosome** lFixedChromos = new Chromosome*[2];
-           lFixedChromos[0] = lChildChromo0;
-           lFixedChromos[1] = lChildChromo1;
+    Chromosome** lFixedChromos = new Chromosome*[2];
+    lFixedChromos[0] = lChildChromo0;
+    lFixedChromos[1] = lChildChromo1;
 
-           return lFixedChromos;
+    return lFixedChromos;
 }
 

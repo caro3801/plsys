@@ -15,8 +15,9 @@ class SymbolChromosome : public FixedChromosome
 {
 public:
     SymbolChromosome();
-    SymbolChromosome(int nbSymbol,vector<Symbol*> &symbolV, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap );
+    SymbolChromosome(int nbSymbol,vector<Symbol*> &symbolV, IntDomain* tsNameDomain, std::vector<Symbol*> &tsmap, bool pOnSym=true );
 
+    bool mOnSym;
     virtual Chromosome* clone();
     virtual Chromosome* copy();
     virtual Chromosome* create();

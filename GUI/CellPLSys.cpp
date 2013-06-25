@@ -16,10 +16,7 @@ CellPLSys::CellPLSys(int id, vector<Symbol *> pSymbolV, QWidget *parent)
     mExport->setIcon(QIcon("save.png"));
     mExport->setIconSize(QSize(40,40));
     mExport->setMaximumWidth(60);
-    /*   this->addWidget(mGLWidget);
-    this->addWidget(mSelected);
-    this->addWidget(mExport);
-   */
+
     QObject::connect(mSelected, SIGNAL(stateChanged(int)),this->getGLWidget(), SLOT(changeSelection()));
 
     QObject::connect(mExport, SIGNAL(clicked()),this->getGLWidget(), SLOT(exportMesh()));
@@ -71,7 +68,10 @@ bool CellPLSys::isSelected(){
   }
 
 void CellPLSys::clear(){
-    mSelected->setChecked(false);
+    uncheck();
     mGLWidget->clear();
 }
+void CellPLSys::uncheck(){
 
+    mSelected->setChecked(false);
+}

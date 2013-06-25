@@ -24,6 +24,7 @@ public:
     void clear();
 
     QVBoxLayout *v;
+    void uncheck();
 signals:
     void stateChanged(int state);
 

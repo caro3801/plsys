@@ -41,7 +41,7 @@ public :
 
     void initFitness();
 
-    void initialize();
+    void initialize(bool changeSym, bool changeParam);
 
     void addIndividual();
 

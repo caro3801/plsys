@@ -168,7 +168,7 @@ void SPopulation::clearGenomeArray()
  * les individus de la Population.
  *
  *****************************************************************************/
-void SPopulation::initialize()
+void SPopulation::initialize(bool changeSym, bool changeParam)
 {
 
     int i;
@@ -181,7 +181,7 @@ void SPopulation::initialize()
 
     for (i=this->mNbGenomes ; i<this->mInitialNbGenomes ; i++)
     {
-        this->add(((PLSysGenome*)(this->mFather))->create(this->iter) );
+        this->add(((PLSysGenome*)(this->mFather))->create(this->iter, changeSym,changeParam) );
     }
 
     this->mIsInitialized = true;

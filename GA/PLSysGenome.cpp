@@ -25,16 +25,18 @@ PLSysGenome::PLSysGenome():Genome(1)
 
 }
 
-PLSysGenome::PLSysGenome(int pSize):Genome(2) {
+PLSysGenome::PLSysGenome(int pSize,bool pChangeSym, bool pChangeParam):Genome(2) {
     this->iter=pSize;
+    this->changeSym=pChangeSym;
+    this->changeParam=pChangeParam;
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
     this->mTSMap.clear();
     this->mTSMap=this->getPLSys()->mapTS;
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
     vector<Symbol *> symbv=this->getPLSys()->getPllist();
-    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap),1);
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym),1);
 
-    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain),1);
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeParam),1);
     delete turtleDomain;
     plsysInit=false;
 }
@@ -51,9 +53,9 @@ PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(2){
 
     }
     IntDomain* tsNameDomain = new IntDomain(0,this->mTSMap.size()-1);
-    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap), 1);
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym), 1);
 
-    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain),1);
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeParam),1);
     delete turtleDomain;
     plsysInit=false;
 }
@@ -71,16 +73,18 @@ PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(2, 1) {
 
     vector<Symbol *> symbv=this->plsys->getPllist();
 
-    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap), 1);
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym), 1);
 
-    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain), 1);
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeParam), 1);
 
     delete turtleDomain;
     plsysInit=false;
 }
 
-PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(2){
+PLSysGenome::PLSysGenome(PLSys * pPLSys,bool pOnSym,bool pOnParam): Genome(2){
 
+    changeSym=pOnSym;
+    changeParam=pOnParam;
     //this->plsys=pPLSys;
     delete plsys;
     setPLSys(*pPLSys);
@@ -98,9 +102,9 @@ PLSysGenome::PLSysGenome(PLSys * pPLSys): Genome(2){
     }
     IntDomain* tsNameDomain = new IntDomain(0,s);
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
-    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap), 1);
+    addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym), 1);
 
-    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain), 1);
+    addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeSym), 1);
 
     plsysInit=false;
 }
@@ -120,10 +124,10 @@ void PLSysGenome::setPLSys(const PLSys &pPLSys){
     plsysInit=true;
 }
 Genome* PLSysGenome::create() {
-    return new PLSysGenome(1);
+    return new PLSysGenome();
 }
-Genome* PLSysGenome::create(int iter) {
-    return new PLSysGenome(iter);
+Genome* PLSysGenome::create(int iter, bool pChangeSym, bool pChangeParam) {
+    return new PLSysGenome(iter,pChangeSym,pChangeParam);
 }
 
 bool PLSysGenome::equals(Genome* pGenome) {
@@ -143,7 +147,7 @@ bool PLSysGenome::isGeneric() {
 }
 
 Genome* PLSysGenome::clone() {
-    PLSysGenome* lGenome =  new PLSysGenome(this->iter);
+    PLSysGenome* lGenome =  new PLSysGenome(this->iter,this->changeParam,this->changeSym);
     lGenome->iter=this->iter;
     lGenome->mNbChromosomes = this->mNbChromosomes;
     lGenome->mNbNotes = this->mNbNotes;
@@ -160,6 +164,9 @@ Genome* PLSysGenome::copy() {
 
     PLSysGenome* lGenome =new PLSysGenome();
     lGenome->plsysInit=this->plsysInit;
+    lGenome->changeParam=this->changeParam;
+    lGenome->changeSym=this->changeSym;
+
     lGenome->plsys=this->plsys;
     lGenome->iter=this->iter;
     lGenome->mTSMap=this->mTSMap;

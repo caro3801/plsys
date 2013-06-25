@@ -13,8 +13,9 @@ using namespace std;
 class SymbolPChromosome: public FixedChromosome
 {
 public:
+    bool mOnParam;
     SymbolPChromosome();
-    SymbolPChromosome(int nbSymbol, vector<Symbol *> &symbolV, DoubleDomain *turtleDomain);
+    SymbolPChromosome(int nbSymbol, vector<Symbol *> &symbolV, DoubleDomain *turtleDomain, bool pOnParam=true);
     virtual Chromosome* clone();
     virtual Chromosome* copy();
     virtual Chromosome* create();

@@ -18,34 +18,40 @@ SymbolPChromosome::SymbolPChromosome():FixedChromosome()
 }
 
 
-SymbolPChromosome::SymbolPChromosome(int nbSymbol, vector<Symbol*> &symbolV,DoubleDomain* turtleDomain ):FixedChromosome(nbSymbol){
+SymbolPChromosome::SymbolPChromosome(int nbSymbol, vector<Symbol*> &symbolV,DoubleDomain* turtleDomain, bool pOnParam )
+    :FixedChromosome(nbSymbol){
 
+
+    mOnParam = pOnParam;
     Random *lRandom=NULL;
     lRandom->getInstance();
 
-    double similarity=1.;
     for (int i=0; i<nbSymbol;i++){
 
-
-        //double delta=symbolV.at(i)->getMod();
-        //delta=similarity*delta;
-        double dmin=symbolV.at(i)->getMin();
-        double dmax=symbolV.at(i)->getMax();
-        double mod=dmax;
-        double delta=(dmax-dmin)*30./100.;
-        delta*=similarity;
-        double symval=symbolV.at(i)->get(0);
-        dmin=modulo(symval-delta,mod)+dmin;
-        dmax=modulo(symval+delta,mod);
-        if (dmin>dmax){
-            double tmp=dmin;
-            dmin=dmax;
-            dmax=tmp;
+        DoubleGene * tmpgene;
+        if (pOnParam){
+            DoubleDomain * d= new DoubleDomain(symbolV.at(i)->getMin(),symbolV.at(i)->getMax());
+            tmpgene=new DoubleGene(d,symbolV.at(i)->get(0));
+        }else{
+            //double delta=symbolV.at(i)->getMod();
+            //delta=similarity*delta;
+            double dmin=symbolV.at(i)->getMin();
+            double dmax=symbolV.at(i)->getMax();
+            double mod=dmax;
+            double delta=(dmax-dmin)*30./100.;
+            double symval=symbolV.at(i)->get(0);
+            dmin=modulo(symval-delta,mod)+dmin;
+            dmax=modulo(symval+delta,mod);
+            if (dmin>dmax){
+                double tmp=dmin;
+                dmin=dmax;
+                dmax=tmp;
+            }
+            turtleDomain->setMin(dmin);
+            turtleDomain->setMax(dmax);
+            tmpgene=new DoubleGene(turtleDomain);
         }
-        turtleDomain->setMin(dmin);
-        turtleDomain->setMax(dmax);
-
-        this->addGene(new DoubleGene(turtleDomain));
+        this->addGene(tmpgene);
     }
 
     this->mType = Chromosome::eComposite;
@@ -61,6 +67,7 @@ Chromosome* SymbolPChromosome::create()
     SymbolPChromosome* lChromosome = new SymbolPChromosome();
 
     lChromosome->mType = this->mType;
+    lChromosome->mOnParam = this->mOnParam;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
 
     lChromosome->mGenesArray = vector<Gene*>(this->mGenesArray.size());
@@ -95,6 +102,7 @@ Chromosome* SymbolPChromosome::copy()
     SymbolPChromosome* lChromosome = new SymbolPChromosome();
 
     lChromosome->mType = this->mType;
+    lChromosome->mOnParam = this->mOnParam;
     lChromosome->mCrossoverMode = this->mCrossoverMode;
     lChromosome->mNbGenes = this->mNbGenes;
 
@@ -147,22 +155,22 @@ Chromosome** SymbolPChromosome::cross(Chromosome* pParent, int pPoint){
     Chromosome* lChildChromo1;
     lChildChromo0 = this->clone();
     lChildChromo1 = this->clone();
-int i;
+    int i;
     for (i=0 ; i<pPoint ; i++)
-           {
+    {
 
-               lChildChromo0->mGenesArray.push_back(this->mGenesArray[i]->copy());
-               lChildChromo1->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
-           }
-           for (i=pPoint ; i<this->mNbGenes ; i++)
-           {
-               lChildChromo0->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
-               lChildChromo1->mGenesArray.push_back(this->mGenesArray[i]->copy());
-           }
+        lChildChromo0->mGenesArray.push_back(this->mGenesArray[i]->copy());
+        lChildChromo1->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
+    }
+    for (i=pPoint ; i<this->mNbGenes ; i++)
+    {
+        lChildChromo0->mGenesArray.push_back(pParent->mGenesArray[i]->copy());
+        lChildChromo1->mGenesArray.push_back(this->mGenesArray[i]->copy());
+    }
 
-           Chromosome** lFixedChromos = new Chromosome*[2];
-           lFixedChromos[0] = lChildChromo0;
-           lFixedChromos[1] = lChildChromo1;
+    Chromosome** lFixedChromos = new Chromosome*[2];
+    lFixedChromos[0] = lChildChromo0;
+    lFixedChromos[1] = lChildChromo1;
 
-           return lFixedChromos;
+    return lFixedChromos;
 }

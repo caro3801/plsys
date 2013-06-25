@@ -5,7 +5,6 @@
 #include <iostream>
 #include <stack>
 #include <Random.h>
-
 #include "glwidget.h"
 #include "symbol.h"
 #include "turtle.h"
@@ -217,8 +216,10 @@ void GLWidget::setSymbolVector(vector<Symbol*> symv){
 void GLWidget::changeSelection(){
     if (!isSelected()){
         mSelected=true;
+
     }else{
         mSelected=false;
+
     }
 }
 

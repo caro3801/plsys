@@ -7,15 +7,15 @@ class PLSysGenome : public Genome
 {
 public:
     PLSysGenome();
-    PLSysGenome(int pSize);
+    PLSysGenome(int pSize,bool pChangeSym, bool pChangeParam);
     PLSysGenome(int pSize, int nbObjectives);
     PLSysGenome(std::vector<Symbol *> symbv);
-    PLSysGenome(PLSys * pPLSys);
+    PLSysGenome(PLSys * pPLSys, bool pOnSym=true, bool pOnParam=true);
 
     Genome* clone();
     Genome* copy();
     Genome* create();
-    Genome* create(int iter=0);
+    Genome* create(int iter=0,bool pChangeSym=false,bool pChangeParam=false);
     Genome* createMoreGeneric(PLSysGenome *pGenome);
 
     bool equals(Genome* pGenome);
@@ -35,6 +35,7 @@ public:
     std::vector<Symbol*> convertSymbolChromosomeToSymbolVector();
 
     bool plsysInit;
+    bool changeSym,changeParam;
 };
 
 #endif // PLSYSGENOME_H

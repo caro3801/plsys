@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //4cells
-    this->on_horizontalSliderSimilarity_valueChanged((double)ui->horizontalSliderSimilarity->value());
     this->on_horizontalSliderCrossover_valueChanged(ui->horizontalSliderCrossover->value());
     this->on_horizontalSliderMutation_valueChanged(ui->horizontalSliderMutation->value());
     this->on_action4_triggered();
@@ -27,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     isSeeded=false;
     iter=0;
     mPlsys= 0;
+
     slotsinitialisation();
     initPLSys();
 
@@ -34,11 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 void MainWindow::slotsinitialisation(){
 
-    connect(ui->pushButtonSeedAG, SIGNAL(clicked(bool)), this, SLOT(seedAG()));
-    connect(ui->pushButtonEvolveAG, SIGNAL(clicked(bool)), this, SLOT(newgeneration()));
 
-
-    connect(ui->spinBoxIteration, SIGNAL(valueChanged(int)), this, SLOT(iteration(int)));
 
 }
 
@@ -74,6 +70,7 @@ void MainWindow::initPLSys(){
 void MainWindow::updateCells(){
     if (isInit && isSeeded){
         for(int i=0; i < nbCells;i++){
+            mCells.at(i)->uncheck();
             mCells.at(i)->setSymbolV(this->pop->getGenomesSymbolsArray().at(i));
         }
     }
@@ -98,7 +95,7 @@ void MainWindow::setNbCells(int val){
     //nbCells=ui->spinBoxNbCells->value();
     int row,col=0;
     for (int i=0;i<nbCells;i++){
-        mCells.push_back(new CellPLSys(i,vector<Symbol*>()));
+        mCells.push_back(new CellPLSys(i,vector<Symbol*>(),this));
 
         if (nbCells%4==0 && nbCells!=4){
             row= i%4;
@@ -151,7 +148,7 @@ void MainWindow::initGA(){
     this->pop = new SPopulation(mg,this->nbCells,params,this->iter);
 
     this->pop->updateGAParameter();
-    pop->initialize() ;
+    pop->initialize(!ui->checkBoxSymbols->isChecked(),!ui->checkBoxParameters->isChecked()) ;
     pop->setGenomesSymbolsArray();
 }
 
@@ -183,6 +180,7 @@ void MainWindow::updateGeneticOperators(){
 
 
 
+
 void MainWindow::on_action4_triggered()
 {
     nbCells=4;
@@ -206,27 +204,6 @@ void MainWindow::on_action16_triggered()
 }
 
 
-
-void MainWindow::on_checkBoxSymbols_clicked()
-{
-    isSymbols;
-    isParameters;
-}
-
-void MainWindow::on_checkBoxParameters_clicked()
-{
-
-}
-
-
-
-void MainWindow::on_horizontalSliderSimilarity_valueChanged(int value)
-{
-    similarity=(double)value/10.;
-    ui->labelSimilarity->setText(QString("%1%2%3%4").arg("Similarity ","(",QString::number(similarity),")"));
-    statusBar()->showMessage(QString("%1%2").arg("Similarity: ",QString::number(similarity)));
-}
-
 void MainWindow::on_horizontalSliderCrossover_valueChanged(int value)
 {
 
@@ -245,4 +222,75 @@ void MainWindow::on_horizontalSliderMutation_valueChanged(int value)
 
     ui->labelMutRate->setText(QString("%1%2%3").arg("Mutation rate: ",QString::number(mutRate),"%"));
     statusBar()->showMessage(QString("%1%2%3").arg("Mutation rate : ",QString::number(mutRate),"%"));
+}
+
+void MainWindow::on_pushButtonEvolveAG_clicked()
+{
+
+    statusBar()->showMessage(QString("%1").arg("Evolution : running..."));
+    newgeneration();
+    statusBar()->showMessage(QString("%1").arg("Evolution : finished."));
+}
+
+void MainWindow::on_pushButtonSeedAG_clicked()
+{
+    statusBar()->showMessage(QString("%1").arg("Boot strap population : running..."));
+    seedAG();
+    statusBar()->showMessage(QString("%1").arg("Boot strap population : finished."));
+}
+
+
+void MainWindow::on_checkBoxSymbols_clicked(bool checked)
+{
+    bool res1,res2;
+    checked?res1=true:res1=false;
+    ui->checkBoxParameters->isChecked()?res2=true:res2=false;
+    if (res1 && res2){
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : parameters and symbols."));
+    }else if (res1 && !res2){
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : symbols."));
+    }else if (!res1 && res2){
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : parameters."));
+    }else if (!res1 &&!res2){
+
+        ui->checkBoxParameters->setChecked(true);
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : parameters."));
+    }
+
+}
+
+
+
+void MainWindow::on_checkBoxParameters_clicked(bool checked)
+{
+    bool res1,res2;
+    checked?res1=true:res1=false;
+    ui->checkBoxSymbols->isChecked()?res2=true:res2=false;
+    if (res1 && res2){
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : parameters and symbols."));
+    }else if (res1 && !res2){
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : parameters."));
+    }else if (!res1 && res2){
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : symbols."));
+    }else if (!res1 &&!res2){
+
+        ui->checkBoxSymbols->setChecked(true);
+
+        statusBar()->showMessage(QString("%1").arg("Evolution on : symbols."));
+    }
+}
+
+
+
+void MainWindow::on_spinBoxIteration_valueChanged(int arg1)
+{
+    iteration(arg1);
+    statusBar()->showMessage(QString("%1%2").arg("Iteration : ",arg1));
 }
