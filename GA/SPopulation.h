@@ -4,6 +4,9 @@
 #include "Population.h"
 #include "PLSysGenome.h"
 #include "symbol.h"
+
+typedef std::vector< std::vector<Symbol*> > vvSymbol ;
+typedef std::vector<std::vector<QColor>> vvColor;
 /******************************************************************************
  ****************************** CLASS DEFINITION ******************************
  ******************************************************************************/
@@ -37,8 +40,11 @@ public :
     void clearGenomeArray();
 
     void setGenomesSymbolsArray(); // caroline
-    std::vector< std::vector<Symbol*> > getGenomesSymbolsArray(); // caroline
+    vvSymbol getGenomesSymbolsArray(); // caroline
 
+
+    void setGenomesColorsArray(); // caroline
+    std::vector<QColor> getGenomesColorsArray(int indexgenome); // caroline
     void initFitness();
 
     void initialize(bool changeSym, bool changeParam);
@@ -93,8 +99,9 @@ public :
 public://MODIF
     /** Liste des individus.
   */
-    std::vector< std::vector<Symbol*> > mGenomesSymbolsArray;
+    vvSymbol mGenomesSymbolsArray;
     std::vector<int> mSelected;
+    vvColor mGenomesColorsArray;
     //Genome** mGenomesArray;
 protected:
 

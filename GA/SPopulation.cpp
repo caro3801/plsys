@@ -14,6 +14,7 @@
  ******************************* INCLUDE SECTION ******************************
  ******************************************************************************/
 #include "SPopulation.h"
+#include "ColorChromosome.h"
 
 #include "Random.h"
 #include "GAParameter.h"
@@ -40,7 +41,7 @@
 
 #include "ComplexGene.h"
 #include "PLSysGenome.h"
-
+#include "QColor"
 /******************************************************************************
  ************************ DEFINE AND CONSTANT SECTION  ************************
  ******************************************************************************/
@@ -203,10 +204,35 @@ void SPopulation::setGenomesSymbolsArray(){
     }
 
 }
-
-vector< vector<Symbol*> > SPopulation::getGenomesSymbolsArray(){
+vvSymbol SPopulation::getGenomesSymbolsArray(){
     return mGenomesSymbolsArray;
 }
+
+void SPopulation::setGenomesColorsArray(){
+    this->mGenomesColorsArray.clear();
+    vector<QColor> vc;
+    int r,g,b;
+    for (int i=0;i< this->mInitialNbGenomes;i++){
+
+        vc.clear();
+
+        for (int j=0;j<2;j++){//int gene
+            ComplexGene* cg=((ComplexGene*)((ColorChromosome *)((PLSysGenome*)this->mGenomesArray.at(i))->getChromosome(2))->getGene(j));
+            r=((IntGene *)cg->getGene(0))->get();
+            g=((IntGene *)cg->getGene(1))->get();
+            b=((IntGene *)cg->getGene(2))->get();
+            vc.push_back(QColor(r,g,b));
+
+        }
+        mGenomesColorsArray.push_back(vc);
+    }
+}
+
+
+std::vector<QColor> SPopulation::getGenomesColorsArray(int indexgenome){
+    return mGenomesColorsArray.at(indexgenome);
+}
+
 
 
 void SPopulation::initFitness() //initFitness(int[] tableauNoteFitness)

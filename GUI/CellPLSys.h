@@ -17,6 +17,7 @@ public:
     int getID();
     QCheckBox *createSelectCheckBox();
 
+    void setColorV(std::vector<QColor> colorv);
     void setSymbolV(std::vector<Symbol*> symv);
     bool isSelected();
     QPushButton * getExportButton();
@@ -32,7 +33,7 @@ signals:
 
 private:
     int ID;
-     QHBoxLayout * h;
+    QHBoxLayout * h;
     GLWidget *mGLWidget;
     QCheckBox * mSelected;
     QPushButton * mExport;

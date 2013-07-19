@@ -8,7 +8,7 @@ static double modulo(double x, double y)
 }
 
 SymbolForward::SymbolForward(char name, double value):Symbol( name,value){
-    max=1.2;
+    max=2.0;
     min=0.1;
     mod=0.3;
     if (value>max || value < min){

@@ -2,15 +2,12 @@
 #include "Chromosome.h"
 #include "SymbolChromosome.h"
 #include "SymbolPChromosome.h"
+#include "ColorChromosome.h"
 
-#include "Gene.h"
 #include "ComplexGene.h"
-#include "IntGene.h"
-#include "BitGene.h"
 #include "IntDomain.h"
-#include "IntFixedChromosome.h"
-#include "DoubleFixedChromosome.h"
 #include "DoubleDomain.h"
+#include "IntGene.h"
 #include "DoubleGene.h"
 
 #include "functions.h"
@@ -18,6 +15,7 @@
 #include "iostream"
 
 using namespace std;
+
 PLSys* PLSysGenome::plsys=initglsystem();
 PLSysGenome::PLSysGenome():Genome(1)
 {
@@ -25,7 +23,7 @@ PLSysGenome::PLSysGenome():Genome(1)
 
 }
 
-PLSysGenome::PLSysGenome(int pSize,bool pChangeSym, bool pChangeParam):Genome(2) {
+PLSysGenome::PLSysGenome(int pSize,bool pChangeSym, bool pChangeParam):Genome(3) {
     this->iter=pSize;
     this->changeSym=pChangeSym;
     this->changeParam=pChangeParam;
@@ -37,12 +35,14 @@ PLSysGenome::PLSysGenome(int pSize,bool pChangeSym, bool pChangeParam):Genome(2)
     addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym),1);
 
     addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeParam),1);
+
+    addChromosome(new ColorChromosome(2),1);//color
     delete turtleDomain;
     plsysInit=false;
 }
 
 
-PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(2){
+PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(3){
 
     DoubleDomain* turtleDomain = new DoubleDomain(0.0f,30.0f);
     for (int i=0;i<(int)symbv.size();i++){
@@ -56,12 +56,13 @@ PLSysGenome::PLSysGenome(std::vector<Symbol *> symbv): Genome(2){
     addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym), 1);
 
     addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeParam),1);
+    addChromosome(new ColorChromosome(2),1);//color
     delete turtleDomain;
     plsysInit=false;
 }
 
 
-PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(2, 1) {
+PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(3, 1) {
 
     this->iter=pSize;
     this->mTSMap.clear();
@@ -76,12 +77,13 @@ PLSysGenome::PLSysGenome(int pSize, int nbObjectives):Genome(2, 1) {
     addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym), 1);
 
     addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeParam), 1);
+    addChromosome(new ColorChromosome(2),1);//color
 
     delete turtleDomain;
     plsysInit=false;
 }
 
-PLSysGenome::PLSysGenome(PLSys * pPLSys,bool pOnSym,bool pOnParam): Genome(2){
+PLSysGenome::PLSysGenome(PLSys * pPLSys,bool pOnSym,bool pOnParam): Genome(3){
 
     changeSym=pOnSym;
     changeParam=pOnParam;
@@ -105,6 +107,7 @@ PLSysGenome::PLSysGenome(PLSys * pPLSys,bool pOnSym,bool pOnParam): Genome(2){
     addChromosome(new SymbolChromosome(symbv.size(),symbv,tsNameDomain,mTSMap,changeSym), 1);
 
     addChromosome(new SymbolPChromosome(symbv.size(),symbv,turtleDomain,changeSym), 1);
+    addChromosome(new ColorChromosome(2),1);//color
 
     plsysInit=false;
 }
@@ -194,32 +197,22 @@ Genome* PLSysGenome::copy() {
 vector<Symbol*> PLSysGenome::convertSymbolChromosomeToSymbolVector(){
     int size=(int)((SymbolChromosome*)this->getChromosome(0))->size();
     vector<Symbol *> lsymbolv;
+           SymbolFactory *sf=new SymbolFactory();
     for (int i=0;i<size;i++){
         int symbol_intval=((IntGene*)((SymbolChromosome*)this->getChromosome(0))->getGene(i))->get();
-
         double symbol_doubleval=((DoubleGene*)((SymbolPChromosome*)this->getChromosome(1))->getGene(i))->get();
-        lsymbolv.push_back(new Symbol(mTSMap.at(symbol_intval)->getName(),parametres(1,(param){'x',symbol_doubleval})));
-    }
 
+        lsymbolv.push_back(sf->create(mTSMap.at(symbol_intval)->getName(),symbol_doubleval));
+
+    }
+delete sf;
 
     return lsymbolv;
 
 }
 
 void PLSysGenome::fitness() {
-    int ch=0;
-    // int s=   this->mChromosomesArray[0]->size() ;
-    /*vector<Symbol*> lsymv=this->convertSymbolChromosomeToSymbolVector();
-    foreach(Symbol * s,lsymv){
-        s->afficher();
-    }*/
-
-    cout<< endl;
-
-    cout <<"do you like this chromosome?"<< endl;
-    cin >> ch;
-
-    this->setNote((float)(ch)/10.);
+    //the user selection is the fitness
 
 }
 
@@ -239,6 +232,7 @@ void PLSysGenome::cross(Genome* pGenome, Genome* pOffspringA, Genome* pOffspring
         for (int i=0 ; i<this->mNbChromosomes ; i++)
         {
             Chromosome** lChromos;
+
             if (i==0){//sur les symboles pas sur les parametres
 
                 lChromos = ((SymbolChromosome*)this->mChromosomesArray[i])->cross(pGenome->mChromosomesArray[i],lPoint);
@@ -247,6 +241,10 @@ void PLSysGenome::cross(Genome* pGenome, Genome* pOffspringA, Genome* pOffspring
             }
             if (i==1){
                 lChromos = ((SymbolPChromosome*)this->mChromosomesArray[i])->cross(pGenome->mChromosomesArray[i],lPoint);
+
+            }
+            if (i==2){//color
+                lChromos = this->getChromosome(i)->cross(pGenome->getChromosome(i));
 
             }
             pOffspringA->mChromosomesArray.push_back(lChromos[0]);

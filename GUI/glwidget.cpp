@@ -13,9 +13,21 @@
 #include <Convol/include/ScalarFields/BlobtreeNode/NodeOperators/NodeOperatorNCorrectedConvolutionT.h>
 
 #include <OpenMesh/Core/IO/MeshIO.hh>
-#include <OpenMesh/Core/IO/writer/OBJWriter.hh>
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
 
+#include <OpenMesh/Core/IO/exporter/ExporterT.hh>
+#include <OpenMesh/Core/IO/writer/STLWriter.hh>
+#include <OpenMesh/Core/IO/writer/STLWriter.cc>
+#include <OpenMesh/Core/IO/writer/PLYWriter.hh>
+#include <OpenMesh/Core/IO/writer/PLYWriter.cc>
+#include <OpenMesh/Tools/Utils/getopt.h>
+#include <OpenMesh/Core/Utils/Property.hh>
+#define CHKWOPT( Option ) \
+  std::cout << "  write " << #Option \
+            << (wopt.check(OpenMesh::IO::Options:: Option)?": yes\n":": no\n")
+
+#define MESHOPT( msg, tf ) \
+  std::cout << "  " << msg << ": " << ((tf)?"yes\n":"no\n")
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -34,12 +46,13 @@ GLWidget::GLWidget(QWidget *parent, std::vector<Symbol *> symv, int ID)
     yRot = 0;
     zRot = 0;
     scale=1.7f;
-
+    colors.push_back(QColor(0,0,0));
+    colors.push_back(QColor(1,1,1));
 
     blobt = new Convol::BlobtreeRootT<AppTraits>();
     skel = new Convol::SkeletonT<AppTraits>(blobt);
     kernel = new Convol::CompactPolynomial6T<AppTraits>(2.0) ;
-    //trim = 0;
+
     implicitsurf = new Convol::ImplicitSurfaceT<AppTraits>(blobt,1.0) ;
 
     prepareImplicitSurface();
@@ -51,8 +64,6 @@ GLWidget::~GLWidget()
 {
 
     symbolv.clear();
-    /*if (trim != 0)
-        delete trim;*/
     delete kernel;
     delete implicitsurf;
     //delete skel;
@@ -213,6 +224,10 @@ void GLWidget::setSymbolVector(vector<Symbol*> symv){
 }
 
 
+void GLWidget::setColors(std::vector<QColor> colorv){
+    this->colors = colorv;
+}
+
 void GLWidget::changeSelection(){
     if (!isSelected()){
         mSelected=true;
@@ -237,19 +252,20 @@ void GLWidget::wheelEvent(QWheelEvent * event){
 void GLWidget::draw(){
     if (symbolv.size()>0){
 
-    for (AppTraits::TriMesh::FaceIter f_it = trim.faces_begin(); f_it != trim.faces_end(); ++f_it)
-    {
 
-        glBegin(GL_POLYGON);      // Get the face-vertex circulator of face _fh
-        for (AppTraits::TriMesh::FaceVertexIter fv_it = trim.fv_iter(f_it); fv_it; ++fv_it)
+        for (AppTraits::TriMesh::FaceIter f_it = trim.faces_begin(); f_it != trim.faces_end(); ++f_it)
         {
-            glColor3dv(&(trim.color(fv_it)[0]));
-            glNormal3dv(&(trim.normal(fv_it)[0]));
-            glVertex3dv(&(trim.point(fv_it)[0]));
+            glBegin(GL_POLYGON);      // Get the face-vertex circulator of face _fh
+            for (AppTraits::TriMesh::FaceVertexIter fv_it = trim.fv_iter(f_it); fv_it; ++fv_it)
+            {
+                //qglColor();
+                glColor3dv(&(trim.color(fv_it)[0]));
+                glNormal3dv(&(trim.normal(fv_it)[0]));
+                glVertex3dv(&(trim.point(fv_it)[0]));
+            }
+            glEnd();
         }
 
-        glEnd();
-    }
     }
 }
 
@@ -261,8 +277,8 @@ void GLWidget::prepareImplicitSurface(){
     //trim=0;
     /*if (trim!=0)
         delete trim;*/
-    //trim = new AppTraits::TriMesh;
     trim = AppTraits::TriMesh();
+
     Convol::NodeOperatorNCorrectedConvolutionT<Convol::CompactPolynomial6T<AppTraits> >* op_node =
             new Convol::NodeOperatorNCorrectedConvolutionT<Convol::CompactPolynomial6T<AppTraits> >();
     skel->nonconst_blobtree_root().AddChildToNAryNode(&(skel->nonconst_blobtree_root()), op_node);
@@ -270,7 +286,6 @@ void GLWidget::prepareImplicitSurface(){
 
     this->turtle=Turtle();
     QVector3D p=QVector3D();
-    QColor color(255,100,0);
 
     AppTraits::Point pp(0.0, 0.0, 0.0);
     SkelVHandle* last_vh = new SkelVHandle(pp, 1.0, op_node, skel);
@@ -282,6 +297,7 @@ void GLWidget::prepareImplicitSurface(){
 
     foreach (Symbol *s, this->symbolv)
     {
+
         this->turtle.interpretSymbol(s);
 
 
@@ -290,8 +306,11 @@ void GLWidget::prepareImplicitSurface(){
 
             if (s->getName() == 'f')
             {
-                if (plop < 255.)
-                    plop += 25.;
+                int r=rand()%2;
+                QColor color(colors[r]);
+
+                /*if (plop < 255.)
+                    plop += 25.;*/
                 cur_vh = new SkelVHandle(pp, 1.0, op_node, skel);
 
                 /*double weight=1.;
@@ -315,9 +334,9 @@ void GLWidget::prepareImplicitSurface(){
                 std::vector< Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar> > color_green_constraints;
                 std::vector< Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar> > color_blue_constraints;
 
-                color_red_constraints.push_back(Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar>(0,/*color.red()/255.*/1.0));
-                color_green_constraints.push_back(Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar>(0,/*color.green()/255.*/1.0 - plop / 255.));
-                color_blue_constraints.push_back(Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar>(0,color.blue()/255.));
+                color_red_constraints.push_back(Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar>(0,/*color.red()/255.*/1.-color.red() / 255.));
+                color_green_constraints.push_back(Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar>(0,/*color.green()/255.*/1.-color.green() / 255.));
+                color_blue_constraints.push_back(Convol::PropConstraint1DT<AppTraits::Scalar,AppTraits::Scalar>(0,1.-color.blue()/255.));
                 seg->SetScalarPropertyConstraints(AppTraits::E_Red,color_red_constraints);
                 seg->SetScalarPropertyConstraints(AppTraits::E_Green,color_green_constraints);
                 seg->SetScalarPropertyConstraints(AppTraits::E_Blue,color_blue_constraints);
@@ -338,10 +357,7 @@ void GLWidget::prepareImplicitSurface(){
 
     blobt->PrepareForEval(0.001, 0.1);
     Convol::tools::BasicMarchingCube<AppTraits>::AxisBoundingBox abb = blobt->GetAxisBoundingBox(0.9);
-   // abb.Scale(2.0);
-   // blobt->set_axis_bounding_box(abb);
-    //abb=blobt->axis_bounding_box();
-    //abb.Scale(4);
+
     bool b=false;
     foreach (Symbol * s,symbolv){
         if (s->getName()=='f'){
@@ -367,29 +383,42 @@ void GLWidget::prepareImplicitSurface(){
 
 
 }
-static void parse(OpenMesh::IO::Options &wopt ){
-   //wopt += OpenMesh::IO::Options::VertexNormal;
-   //wopt += OpenMesh::IO::Options::VertexColor;
-    wopt += OpenMesh::IO::Options::Binary;
 
-}
 void GLWidget::exportMesh(){
 
 
-    std::string filename=QString("%1/shape_%2.%3")
+  std::string filename=QString("%1/shape_%2.%3")
             .arg(QCoreApplication::applicationDirPath())
             .arg(QString::number(this->ID))
-            .arg("stl").toStdString();
+            .arg("ply").toStdString();
     cout << filename<<endl;
-    //mesh      =this->trim;
 
    OpenMesh::IO::Options wopt;
-   parse(wopt);
-   // if (!OpenMesh::IO::OBJWriter().write("/home/caroline/workspace/test.stl",OpenMesh::IO::ExporterT<>(trim),wopt))
-   if (!OpenMesh::IO::write_mesh(trim, filename,(OpenMesh::IO::Options)wopt))
-   {
-      std::cerr << "write error\n";
-     exit(1);
+
+   wopt += OpenMesh::IO::Options::VertexNormal;
+   wopt += OpenMesh::IO::Options::VertexColor;
+
+
+   std::cout << "  write VertexNormal"
+               << (wopt.check(OpenMesh::IO::Options::VertexNormal) ? ": yes\n":": no\n");
+     CHKWOPT( VertexColor    );
+     CHKWOPT( VertexTexCoord );
+     CHKWOPT( FaceNormal     );
+     CHKWOPT( FaceColor      );
+
+     // -------------------- show mesh capabilities
+
+     std::cout << "Mesh supports\n";
+     MESHOPT("vertex normals", trim.has_vertex_normals());
+     MESHOPT("vertex colors", trim.has_vertex_colors());
+     MESHOPT("texcoords", trim.has_vertex_texcoords2D());
+     MESHOPT("face normals", trim.has_face_normals());
+     MESHOPT("face colors", trim.has_face_colors());
+cout <<endl;
+
+   if (!OpenMesh::IO::write_mesh(trim, filename,wopt)){
+       std::cerr << "write error\n";
+         exit(1);
    }
 
 }

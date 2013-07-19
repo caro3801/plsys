@@ -58,7 +58,7 @@ private:
     void iteration(int iteration);
 public slots:
     void updatePLSysWidget();
-    void setNbCells(int val);
+    void setNbCells();
 
 private slots:
     void on_action4_triggered();

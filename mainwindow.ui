@@ -314,7 +314,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -360,9 +360,6 @@
    </property>
   </action>
   <action name="action4">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>4 shapes</string>
    </property>
@@ -374,9 +371,6 @@
    </property>
   </action>
   <action name="action9">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>9 shapes</string>
    </property>
@@ -388,9 +382,6 @@
    </property>
   </action>
   <action name="action16">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>16 shapes</string>
    </property>

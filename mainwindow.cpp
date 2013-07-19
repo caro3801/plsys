@@ -71,6 +71,7 @@ void MainWindow::updateCells(){
     if (isInit && isSeeded){
         for(int i=0; i < nbCells;i++){
             mCells.at(i)->uncheck();
+            mCells.at(i)->setColorV(this->pop->getGenomesColorsArray(i));
             mCells.at(i)->setSymbolV(this->pop->getGenomesSymbolsArray().at(i));
         }
     }
@@ -80,7 +81,7 @@ void MainWindow::updatePLSysWidget()
     ui->widgetPLSys->setSymbolVector(mPlsys->getPllist());
 }
 
-void MainWindow::setNbCells(int val){
+void MainWindow::setNbCells(){
     //remove widget in glLayout
     foreach (CellPLSys *p, mCells) {
         delete p;
@@ -149,7 +150,9 @@ void MainWindow::initGA(){
 
     this->pop->updateGAParameter();
     pop->initialize(!ui->checkBoxSymbols->isChecked(),!ui->checkBoxParameters->isChecked()) ;
+
     pop->setGenomesSymbolsArray();
+    pop->setGenomesColorsArray();
 }
 
 
@@ -165,6 +168,7 @@ void MainWindow::newgeneration(){
     if (this->pop->mSelected.size()>1){
         this->pop->generation();
         this->pop->setGenomesSymbolsArray();
+        this->pop->setGenomesColorsArray();
         updateCells();
     }
     ui->spinBoxGeneration->stepUp();
@@ -184,21 +188,21 @@ void MainWindow::updateGeneticOperators(){
 void MainWindow::on_action4_triggered()
 {
     nbCells=4;
-    setNbCells(nbCells);
+    setNbCells();
     statusBar()->showMessage(tr("4 shapes"));
 }
 
 void MainWindow::on_action9_triggered()
 {
     nbCells=9;
-    setNbCells(nbCells);
+    setNbCells();
 
     statusBar()->showMessage(tr("9 shapes"));
 }
 void MainWindow::on_action16_triggered()
 {
     nbCells=16;
-    setNbCells(nbCells);
+    setNbCells();
 
     statusBar()->showMessage(tr("16 shapes"));
 }

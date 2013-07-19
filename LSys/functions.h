@@ -12,18 +12,6 @@ struct param;
 static vector<Symbol *> alphabet;
 
 
-static vector<param> parametres(int nbp, ...){
-    param p[nbp];
-    va_list ap;
-    va_start(ap, nbp);
-    for( int i = 0 ; i < nbp ; i++){
-        p[i]=va_arg(ap, param);
-    }
-    va_end(ap);
-
-    vector<param> res(p,p+ (sizeof p/ sizeof p[0]));
-    return res;
-}
 
 //mes conditions
 static bool sup(Symbol *l) {

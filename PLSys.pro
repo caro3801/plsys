@@ -11,59 +11,63 @@ QMAKE_CXXFLAGS += -std=c++0x
 INCLUDEPATH += . \
                GUI \
                LSys \
+               OM \
                GA \
 
 # Input
-HEADERS += icosphere.h \
-           GA/PLSysGenome.h \
-           GA/SymbolChromosome.h \
-           GUI/CellPLSys.h \
-           GUI/glwidget.h \
-           LSys/functions.h \
-           LSys/param.h \
-           LSys/plsys.h \
-           LSys/rule.h \
-           LSys/symbol.h \
-           LSys/turtle.h \
-           LSys/turtlecore.h \
-    GA/SPopulation.h \
-    mainwindow.h \
-    GA/SymbolPChromosome.h \
-    LSys/symbolforward.h \
-    LSys/symbolangle.h \
-    LSys/symbolstack.h \
-    LSys/symbolfactory.h
+HEADERS +=  icosphere.h \
+            mainwindow.h \
+            GA/PLSysGenome.h \
+            GA/SymbolChromosome.h \
+            GA/SPopulation.h \
+            GA/SymbolPChromosome.h \
+            GUI/CellPLSys.h \
+            GUI/glwidget.h \
+            LSys/functions.h \
+            LSys/param.h \
+            LSys/plsys.h \
+            LSys/rule.h \
+            LSys/symbol.h \
+            LSys/turtle.h \
+            LSys/turtlecore.h \
+            LSys/symbolforward.h \
+            LSys/symbolangle.h \
+            LSys/symbolstack.h \
+            LSys/symbolfactory.h \
+    GA/ColorChromosome.h
 
-SOURCES += icosphere.cpp \
-           main.cpp \
-           GA/PLSysGenome.cpp \
-           GA/SymbolChromosome.cpp \
-           GUI/CellPLSys.cpp \
-           GUI/glwidget.cpp \
-           LSys/plsys.cpp \
-           LSys/rule.cpp \
-           LSys/symbol.cpp \
-           LSys/turtle.cpp \
-           LSys/turtlecore.cpp \
-    GA/SPopulation.cpp \
-    mainwindow.cpp \
-    GA/SymbolPChromosome.cpp \
-    LSys/symbolforward.cpp \
-    LSys/symbolangle.cpp \
-    LSys/symbolstack.cpp \
-    LSys/symbolfactory.cpp
+SOURCES +=  mainwindow.cpp \
+            icosphere.cpp \
+            main.cpp \
+            GA/PLSysGenome.cpp \
+            GA/SymbolChromosome.cpp \
+            GA/SPopulation.cpp \
+            GA/SymbolPChromosome.cpp \
+            GUI/CellPLSys.cpp \
+            GUI/glwidget.cpp \
+            LSys/plsys.cpp \
+            LSys/rule.cpp \
+            LSys/symbol.cpp \
+            LSys/turtle.cpp \
+            LSys/turtlecore.cpp \
+            LSys/symbolforward.cpp \
+            LSys/symbolangle.cpp \
+            LSys/symbolstack.cpp \
+            LSys/symbolfactory.cpp \
+    GA/ColorChromosome.cpp
+
+FORMS += \
+            mainwindow.ui
 
 
 INCLUDEPATH += /opt/local/include
 LIBS += -L/opt/local/lib
 LIBS += -lboost_system-mt -lboost_filesystem-mt
 
-unix:!macx: LIBS += -L$$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/ -lOpenMeshCored
+#INCLUDEPATH += /usr/local/include/OpenMesh
+#LIBS += -L/usr/local/lib/OpenMesh
+#unix: LIBS += -lOpenMeshCore
 
-INCLUDEPATH += $$PWD/../OpenMesh-2.3.1/src
-DEPENDPATH += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh
-
-unix:!macx: PRE_TARGETDEPS += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/libOpenMeshCored.a
 
 unix:!macx: LIBS += -L$$PWD/../build-convol/ -lconvol
 
@@ -81,5 +85,12 @@ DEPENDPATH += $$PWD/../OOGA
 
 unix:!macx: PRE_TARGETDEPS += $$PWD/../build-OOGA/libOOGA.a
 
-FORMS += \
-    mainwindow.ui
+
+
+
+unix:!macx: LIBS += -L$$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/ -lOpenMeshCore
+
+INCLUDEPATH += $$PWD/../OpenMesh-2.3.1/src
+DEPENDPATH += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/libOpenMeshCore.a

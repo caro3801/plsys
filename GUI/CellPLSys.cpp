@@ -54,6 +54,12 @@ QCheckBox *CellPLSys::createSelectCheckBox()
     cb->setChecked(false);
     return cb;
 }
+
+void CellPLSys::setColorV(std::vector<QColor> colorv){
+
+    this->mGLWidget->setColors(colorv);
+}
+
 void CellPLSys::setSymbolV(vector<Symbol*> symv){
     this->mGLWidget->setSymbolVector(symv);
 }
