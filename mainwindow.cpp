@@ -26,13 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     isSeeded=false;
     iter=0;
     mPlsys= 0;
-
-    slotsinitialisation();
     initPLSys();
-
-
-}
-void MainWindow::slotsinitialisation(){
 
 
 
@@ -63,6 +57,8 @@ void MainWindow::initPLSys(){
     ui->labelCrossRate->setEnabled(true);
     ui->horizontalSliderCrossover->setEnabled(true);
     ui->pushButtonEvolveAG->setEnabled(false);
+    QString q(mPlsys->getName().c_str());
+    ui->lineEditName->setText(q);
 }
 
 
@@ -298,3 +294,26 @@ void MainWindow::on_spinBoxIteration_valueChanged(int arg1)
     iteration(arg1);
     statusBar()->showMessage(QString("%1%2").arg("Iteration : ",arg1));
 }
+
+void MainWindow::on_actionSave_triggered()
+{
+    this->mPlsys->save();
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save my shapes"), "shapes1.plsys",
+            tr("PLSys (*.plsys);;All Files (*)"));
+    if (fileName.isEmpty()){
+
+             return;
+        } else {
+             QFile file(fileName);
+             if (!file.open(QIODevice::WriteOnly)) {
+                 QMessageBox::information(this, tr("Unable to open file"),
+                     file.errorString());
+                 return;
+             }
+             QDataStream out(&file);
+             out.setVersion(QDataStream::Qt_4_5);
+             out << "contacts";
+         }
+}
+

@@ -91,7 +91,7 @@ static PLSys* initglsystem(int iteration=0,QObject *parent=0){
     Symbol *pr= sf->create('/',65);
     Symbol *pl= sf->create('\\',345);*/
     //Init with axiom
-
+    string name="myPLSys";
     alphabet.push_back(sf->create('[')); //0
     alphabet.push_back(sf->create(']')); //1
     alphabet.push_back(sf->create('/',65)); //2
@@ -134,7 +134,7 @@ static PLSys* initglsystem(int iteration=0,QObject *parent=0){
 
 
 
-    return new PLSys(parent,alphabet, axiom,rules,iteration);
+    return new PLSys(parent,name,alphabet, axiom,rules,iteration);
 }
 
 /**/

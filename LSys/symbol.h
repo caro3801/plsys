@@ -2,6 +2,7 @@
 #define SYMBOL_H
 #include <vector>
 #include <string>
+#include "QString"
 #include "param.h"
 struct param;
 class Symbol
@@ -21,6 +22,7 @@ public:
     Symbol();
     Symbol(char name, std::vector<param> p);
     ~Symbol();
+    virtual std::string afficherJSON();
     virtual void afficher();
     virtual std::string toString();
 

@@ -53,7 +53,22 @@ PLSys::PLSys(QObject *parent,vector<Symbol*> alphabet,vector<Symbol*> axiom, vec
         setIteration(iter);
     }
 }
-
+PLSys::PLSys(QObject *parent,string name,vector<Symbol*> alphabet,vector<Symbol*> axiom, vector<Rule> rules , int iter)
+    :QObject(parent)
+{
+    nbIterations=0;
+    setAlphabet(alphabet);
+    bool axOK,ruOK=true;
+    axOK=initAxiom(axiom);
+    ruOK=initRules(rules);
+    if (axOK && ruOK){
+        setAxiom(axiom);
+        setPLList(axiom);
+        setRules(rules);
+        setIteration(iter);
+    }
+    this->name=name;
+}
 
 std::vector<Symbol *> PLSys::getPllist(){
     return this->pllist;
@@ -144,6 +159,13 @@ void PLSys::setIteration(int iter=0){
 void PLSys::addRule(Rule r){
     this->rules.push_back(r);
 }
+void PLSys::setName(string name){
+    this->name=name;
+}
+
+string PLSys::getName(){
+    return this->name;
+}
 
 
 void PLSys::afficher(std::vector<Symbol *> symlist,int iter){
@@ -198,4 +220,47 @@ bool PLSys::feedmap(Symbol *s){
     return false;
 }
 
+void PLSys::save(){
+    string s="{";
+    s+="\"name \":\""+this->name+"\",";
+    s+="\n";
+    s+="\"alphabet\" : \n[\n";
+    QHashIterator<Symbol *,char> it(alphabet);
+    while (it.hasNext()){
 
+        it.next();
+        s+=it.key()->afficherJSON();
+        if (it.hasNext()!=false)
+            s+=",";
+        s+="\n";
+    }
+
+    s+="],";
+    s+="\n";
+    s+="\"axiom\" :[";
+    for (int i=0;i< axiom.size();i++) {
+        s+=axiom.at(i)->afficherJSON();
+        if (i!=axiom.size()-1)
+            s+=",";
+        s+="\n";
+    }
+    s+="],";
+    s+="\n";
+    s+="\"rules\" :\"\",";
+    s+="\n";
+    s+="\"mapTS\" :[ ";
+    for (int i=0;i< mapTS.size();i++) {
+        s+=mapTS.at(i)->afficherJSON();
+        if (i!=mapTS.size()-1)
+            s+=",";
+        s+="\n";
+    }
+    s+="],";
+    s+="\n";
+    s+="\"iteration\" : ";
+    s+=QString::number(this->nbIterations).toStdString();
+    s+="\n";
+    s+="}";
+
+    cout << s <<endl;
+}

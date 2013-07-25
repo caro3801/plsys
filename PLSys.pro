@@ -64,9 +64,9 @@ INCLUDEPATH += /opt/local/include
 LIBS += -L/opt/local/lib
 LIBS += -lboost_system-mt -lboost_filesystem-mt
 
-#INCLUDEPATH += /usr/local/include/OpenMesh
-#LIBS += -L/usr/local/lib/OpenMesh
-#unix: LIBS += -lOpenMeshCore
+INCLUDEPATH += /usr/local/include/OpenMesh
+LIBS += -L/usr/local/lib/OpenMesh
+unix: LIBS += -lOpenMeshCore
 
 
 unix:!macx: LIBS += -L$$PWD/../build-convol/ -lconvol
@@ -88,9 +88,9 @@ unix:!macx: PRE_TARGETDEPS += $$PWD/../build-OOGA/libOOGA.a
 
 
 
-unix:!macx: LIBS += -L$$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/ -lOpenMeshCore
+#unix:!macx: LIBS += -L$$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/ -lOpenMeshCore
 
-INCLUDEPATH += $$PWD/../OpenMesh-2.3.1/src
-DEPENDPATH += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh
+#INCLUDEPATH += $$PWD/../OpenMesh-2.3.1/src
+#DEPENDPATH += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/libOpenMeshCore.a
+#unix:!macx: PRE_TARGETDEPS += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/libOpenMeshCore.a

@@ -1,6 +1,5 @@
 #include "symbol.h"
 #include "Random.h"
-#include "QString"
 #include <iostream>
 using namespace std;
 struct param;
@@ -211,6 +210,16 @@ string Symbol::toString() {
 
     return s.toStdString();
 }
+std::string Symbol::afficherJSON() {
+    if (this->getName()=='\\'){
+        return QString("%1%2%3%4%5").arg("{\"name\" : \"","\\\\","\",\"value\" : ",QString::number(this->get(0)),"}").toStdString();
+    }else{
+
+        return QString("%1%2%3%4%5").arg("{\"name\" : \"",QString(this->getName()),"\",\"value\" : ",QString::number(this->get(0)),"}").toStdString();
+    }
+
+}
+
 
 double Symbol::getMin(){
     return min;

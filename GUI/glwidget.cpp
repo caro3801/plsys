@@ -17,9 +17,7 @@
 
 #include <OpenMesh/Core/IO/exporter/ExporterT.hh>
 #include <OpenMesh/Core/IO/writer/STLWriter.hh>
-#include <OpenMesh/Core/IO/writer/STLWriter.cc>
 #include <OpenMesh/Core/IO/writer/PLYWriter.hh>
-#include <OpenMesh/Core/IO/writer/PLYWriter.cc>
 #include <OpenMesh/Tools/Utils/getopt.h>
 #include <OpenMesh/Core/Utils/Property.hh>
 #define CHKWOPT( Option ) \
@@ -313,15 +311,15 @@ void GLWidget::prepareImplicitSurface(){
                     plop += 25.;*/
                 cur_vh = new SkelVHandle(pp, 1.0, op_node, skel);
 
-                /*double weight=1.;
+                double weight=1.;
 
 
-                Random * r=NULL;
-                r->getInstance();
-                weight=1-r->getDouble()*0.5;
+                Random * w=NULL;
+                w->getInstance();
+                weight=w->getDouble()+0.3;
 
                 cur_vh->set_weight(weight);
-                delete r;*/
+                delete w;
                 SkelHSegment* seg = SkelHSegment::Create(*skel, last_vh, cur_vh, *static_cast<Convol::CompactPolynomial6T<AppTraits>* >(kernel));
                 last_vh = cur_vh;
 

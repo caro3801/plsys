@@ -17,8 +17,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
-    void slotsinitialisation();
 
     void updateGeneticOperators();
 
@@ -71,6 +69,7 @@ private slots:
     void on_checkBoxSymbols_clicked(bool checked);
     void on_checkBoxParameters_clicked(bool checked);
     void on_spinBoxIteration_valueChanged(int arg1);
+    void on_actionSave_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -12,6 +12,7 @@
 class PLSys : public QObject
 {
 public:
+    std::string name;
     std::vector<Symbol*> axiom;
     QHash<Symbol*,char> alphabet;
     std::vector<Rule> rules;
@@ -30,6 +31,7 @@ public:
     PLSys(std::vector<Symbol*> axiom, std::vector<Rule> rules );
 
     PLSys(QObject *parent,std::vector<Symbol*> alphabet, std::vector<Symbol*> axiom, std::vector<Rule> rules, int iter=0);
+    PLSys(QObject *parent,std::string name,std::vector<Symbol*> alphabet, std::vector<Symbol*> axiom, std::vector<Rule> rules, int iter=0);
 
     std::vector<Symbol*> getPllist();
     Symbol *getPllist(int i);
@@ -47,7 +49,9 @@ public:
     void setPLList(std::vector<Symbol *> symbollist);
     bool feedmap(Symbol * s);
 
-    //void draw();
+    void setName(std::string name);
+    std::string getName();
+    void save();
 };
 
 #endif // PLSYS_H
