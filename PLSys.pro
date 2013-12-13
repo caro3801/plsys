@@ -94,3 +94,5 @@ unix:!macx: PRE_TARGETDEPS += $$PWD/../build-OOGA/libOOGA.a
 #DEPENDPATH += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh
 
 #unix:!macx: PRE_TARGETDEPS += $$PWD/../OpenMesh-2.3.1/build/Build/lib/OpenMesh/libOpenMeshCore.a
+
+win32: LIBS += -lOpenMeshCore
